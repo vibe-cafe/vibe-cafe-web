@@ -14,7 +14,7 @@ export default function Home() {
       <MenuBar />
       
       {/* Desktop */}
-      <div className="container mx-auto px-4 pt-8 relative z-10">
+      <div className="container mx-auto px-4 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {/* Profile Window */}
           <MacWindow title="About.txt" className="md:col-span-2 lg:col-span-3">
@@ -41,43 +41,22 @@ export default function Home() {
             <div className="space-y-3 text-sm">
               <p>{t('manifesto.text1')}</p>
               <p>{t('manifesto.text2')}</p>
+              <p>{t('manifesto.text3')}</p>
             </div>
           </MacWindow>
 
           {/* VibeFriends Window */}
           <MacWindow title="VibeFriends.app">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">👥</span>
-                <div>
-                  <h3 className="font-bold">{t('vibeFriends.coders.title')}</h3>
-                  <p className="text-xs text-gray-600">{t('vibeFriends.coders.description')}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">💡</span>
-                <div>
-                  <h3 className="font-bold">{t('vibeFriends.products.title')}</h3>
-                  <p className="text-xs text-gray-600">{t('vibeFriends.products.description')}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🎨</span>
-                <div>
-                  <h3 className="font-bold">{t('vibeFriends.creators.title')}</h3>
-                  <p className="text-xs text-gray-600">{t('vibeFriends.creators.description')}</p>
-                </div>
-              </div>
+            <div className="space-y-3">
+              <h3 className="font-bold text-lg">{t('vibeFriends.title')}</h3>
+              <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
             </div>
           </MacWindow>
 
           {/* VibeCafé Space Window */}
           <MacWindow title="VibeCafe.app">
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🏢</span>
-                <h3 className="font-bold">{t('vibeCafe.title')}</h3>
-              </div>
+              <h3 className="font-bold text-lg">{t('vibeCafe.title')}</h3>
               <p className="text-sm text-gray-600">{t('vibeCafe.description')}</p>
               <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
             </div>
@@ -86,17 +65,12 @@ export default function Home() {
           {/* Contact Window */}
           <MacWindow title="Contact.app">
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">📬</span>
-                <h3 className="font-bold">{t('contact.title')}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{t('contact.description')}</p>
-              <a 
-                href="mailto:contact@vibecafe.com"
-                className="inline-block bg-black text-white text-sm px-4 py-1 rounded hover:bg-gray-800 transition-colors"
+              <h3 className="font-bold text-lg">{t('contact.title')}</h3>
+              <button 
+                className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
               >
                 {t('contact.button')}
-              </a>
+              </button>
             </div>
           </MacWindow>
         </div>
@@ -107,8 +81,11 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="w-16 h-16 bg-white border border-black rounded flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
+            aria-label="Trash"
           >
-            <span className="text-2xl">🗑️</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7H20M19 7L18.133 19.142C18.0971 19.6466 17.8713 20.1188 17.5011 20.4636C17.1309 20.8083 16.6439 21 16.138 21H7.862C7.35614 21 6.86907 20.8083 6.49889 20.4636C6.1287 20.1188 5.90292 19.6466 5.867 19.142L5 7H19ZM10 11V17M14 11V17M15 7V4C15 3.73478 14.8946 3.48043 14.7071 3.29289C14.5196 3.10536 14.2652 3 14 3H10C9.73478 3 9.48043 3.10536 9.29289 3.29289C9.10536 3.48043 9 3.73478 9 4V7H15Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </motion.button>
         </div>
       </div>
