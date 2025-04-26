@@ -6,6 +6,8 @@ import Image from 'next/image';
 import FileIcon from '@/components/FileIcon';
 import { ManagedWindow, useWindowManager } from '@/components/WindowManager';
 import { AnimatePresence } from 'framer-motion';
+import MacWindow from '@/components/MacWindow';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
 const INITIAL_WINDOWS = [
   { 
@@ -48,6 +50,7 @@ const INITIAL_WINDOWS = [
 export default function Home() {
   const { t } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
+  const { isMobile } = useWindowSize();
 
   const fileIcons = [
     {
@@ -81,63 +84,69 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#9C9C9C] font-chicago pt-6">
+    <main className={`min-h-screen bg-[#9C9C9C] font-chicago ${isMobile ? 'pt-2' : 'pt-6'}`}>
       <MenuBar />
       
-      {/* Desktop Icons */}
-      <div className="fixed left-4 top-20 flex flex-col gap-4">
-        <AnimatePresence mode="popLayout">
-          {fileIcons.map(icon => {
-            const window = windows.find(w => w.id === icon.id);
-            if (window?.isDeleted) return null;
-            
-            return (
-              <FileIcon
-                key={icon.id}
-                name={icon.name}
-                type={icon.type}
-                icon={icon.icon}
-                onClick={() => toggleWindow(icon.id)}
-                isOpen={window?.isOpen || false}
-              />
-            );
-          })}
-        </AnimatePresence>
-      </div>
+      {/* Desktop Icons - Hide on Mobile */}
+      {!isMobile && (
+        <>
+          <div className="fixed left-4 top-20 flex flex-col gap-4">
+            <AnimatePresence mode="popLayout">
+              {fileIcons.map(icon => {
+                const window = windows.find(w => w.id === icon.id);
+                if (window?.isDeleted) return null;
+                
+                return (
+                  <FileIcon
+                    key={icon.id}
+                    name={icon.name}
+                    type={icon.type}
+                    icon={icon.icon}
+                    onClick={() => toggleWindow(icon.id)}
+                    isOpen={window?.isOpen || false}
+                  />
+                );
+              })}
+            </AnimatePresence>
+          </div>
 
-      {/* Trash Icon */}
-      <div className="fixed bottom-4 right-4">
-        <FileIcon
-          key="trash"
-          name="Trash"
-          type="app"
-          icon="🗑️"
-          onClick={emptyTrash}
-          isOpen={false}
-        />
-      </div>
+          {/* Trash Icon */}
+          <div className="fixed bottom-4 right-4">
+            <FileIcon
+              key="trash"
+              name="Trash"
+              type="app"
+              icon="🗑️"
+              onClick={emptyTrash}
+              isOpen={false}
+            />
+          </div>
+        </>
+      )}
 
       {/* Windows */}
-      <div className="relative container mx-auto px-4 pt-8">
-        <AnimatePresence>
-          {windows.map(window => {
+      <div className={`relative ${isMobile ? 'px-2 space-y-3 pb-4' : 'container mx-auto px-4 pt-8'}`}>
+        {isMobile ? (
+          // Mobile: Stack windows vertically
+          windows.map((window, index) => {
+            if (!window.isOpen) return null;
             const content = (() => {
               switch (window.id) {
                 case 'about':
                   return (
-                    <div className="flex items-center gap-6">
-                      <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-20 h-20 bg-black rounded-lg flex items-center justify-center p-2">
                         <Image
                           src="/images/vibe-logo.jpeg"
                           alt="Vibe Cafe Logo"
-                          width={72}
-                          height={72}
+                          width={64}
+                          height={64}
                           className="w-full h-full object-contain"
                           priority
                         />
                       </div>
-                      <div>
-                        <h1 className="text-2xl font-bold mb-2">{t('hero.title')}</h1>
+                      <div className="text-center">
+                        <h1 className="text-xl font-bold mb-2">{t('hero.title')}</h1>
                         <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
                       </div>
                     </div>
@@ -152,23 +161,23 @@ export default function Home() {
                   );
                 case 'vibeFriends':
                   return (
-                    <div className="space-y-3">
-                      <h3 className="font-bold text-lg">{t('vibeFriends.title')}</h3>
+                    <div className="space-y-2">
+                      <h3 className="font-bold text-base">{t('vibeFriends.title')}</h3>
                       <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
                     </div>
                   );
                 case 'vibeCafe':
                   return (
-                    <div className="space-y-3">
-                      <h3 className="font-bold text-lg">{t('vibeCafe.title')}</h3>
+                    <div className="space-y-2">
+                      <h3 className="font-bold text-base">{t('vibeCafe.title')}</h3>
                       <p className="text-sm text-gray-600">{t('vibeCafe.description')}</p>
                       <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
                     </div>
                   );
                 case 'contact':
                   return (
-                    <div className="space-y-3">
-                      <h3 className="font-bold text-lg">{t('contact.title')}</h3>
+                    <div className="space-y-2">
+                      <h3 className="font-bold text-base">{t('contact.title')}</h3>
                       <button 
                         className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
                       >
@@ -182,17 +191,93 @@ export default function Home() {
             })();
 
             return (
-              <ManagedWindow
-                key={window.id}
-                {...window}
-                onClose={() => closeWindow(window.id)}
-                onFocus={() => focusWindow(window.id)}
-              >
-                {content}
-              </ManagedWindow>
+              <div key={window.id} className={`w-full ${index === 0 ? 'mt-14' : ''}`}>
+                <MacWindow
+                  title={window.title}
+                  isMobile={true}
+                >
+                  {content}
+                </MacWindow>
+              </div>
             );
-          })}
-        </AnimatePresence>
+          })
+        ) : (
+          // Desktop: Keep existing draggable windows
+          <AnimatePresence>
+            {windows.map(window => {
+              const content = (() => {
+                switch (window.id) {
+                  case 'about':
+                    return (
+                      <div className="flex items-center gap-6">
+                        <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3">
+                          <Image
+                            src="/images/vibe-logo.jpeg"
+                            alt="Vibe Cafe Logo"
+                            width={72}
+                            height={72}
+                            className="w-full h-full object-contain"
+                            priority
+                          />
+                        </div>
+                        <div>
+                          <h1 className="text-2xl font-bold mb-2">{t('hero.title')}</h1>
+                          <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
+                        </div>
+                      </div>
+                    );
+                  case 'manifesto':
+                    return (
+                      <div className="space-y-3 text-sm">
+                        <p>{t('manifesto.text1')}</p>
+                        <p>{t('manifesto.text2')}</p>
+                        <p>{t('manifesto.text3')}</p>
+                      </div>
+                    );
+                  case 'vibeFriends':
+                    return (
+                      <div className="space-y-3">
+                        <h3 className="font-bold text-lg">{t('vibeFriends.title')}</h3>
+                        <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
+                      </div>
+                    );
+                  case 'vibeCafe':
+                    return (
+                      <div className="space-y-3">
+                        <h3 className="font-bold text-lg">{t('vibeCafe.title')}</h3>
+                        <p className="text-sm text-gray-600">{t('vibeCafe.description')}</p>
+                        <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
+                      </div>
+                    );
+                  case 'contact':
+                    return (
+                      <div className="space-y-3">
+                        <h3 className="font-bold text-lg">{t('contact.title')}</h3>
+                        <button 
+                          className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
+                        >
+                          {t('contact.button')}
+                        </button>
+                      </div>
+                    );
+                  default:
+                    return null;
+                }
+              })();
+
+              return (
+                <ManagedWindow
+                  key={window.id}
+                  {...window}
+                  onClose={() => closeWindow(window.id)}
+                  onFocus={() => focusWindow(window.id)}
+                >
+                  {content}
+                </ManagedWindow>
+              );
+            })}
+          </AnimatePresence>
+        )}
       </div>
     </main>
   );

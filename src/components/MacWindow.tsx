@@ -8,10 +8,29 @@ interface MacWindowProps {
   className?: string;
   onClose?: () => void;
   onStartResize?: () => void;
+  isMobile?: boolean;
 }
 
-export default function MacWindow({ title, children, className = '', onClose, onStartResize }: MacWindowProps) {
+export default function MacWindow({ title, children, className = '', onClose, onStartResize, isMobile = false }: MacWindowProps) {
   const [isCloseHovered, setIsCloseHovered] = useState(false);
+
+  if (isMobile) {
+    return (
+      <div className={`bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col ${className}`}>
+        {/* Window Title Bar */}
+        <div className="h-6 bg-[#000000] border-b border-black flex items-center px-2 rounded-t-lg select-none">
+          <div className="flex-1 text-center text-white text-xs font-chicago">
+            {title}
+          </div>
+        </div>
+        
+        {/* Window Content */}
+        <div className="flex-1 p-4 overflow-auto relative">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-full flex flex-col ${className}`}>
