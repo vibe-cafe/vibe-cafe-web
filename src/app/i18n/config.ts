@@ -18,7 +18,7 @@ i18n
           manifesto: {
             title: 'Manifesto',
             text1: 'We believe AI empowers creative individuals with ideas, aesthetics, and execution abilities',
-            text2: 'Vibe - the power to create freely and earn rewards',
+            text2: 'Vibe – A lifestyle where you can create freely and be rewarded',
             text3: 'We help these individuals create and profit with their own vibe',
           },
           vibeFriends: {
@@ -45,7 +45,7 @@ i18n
           manifesto: {
             title: 'Manifesto',
             text1: '我们相信 AI 带给有想法、创意、审美、执行力的个体巨大的创作能力',
-            text2: 'Vibe - 就是自由创作与获取回报的权力',
+            text2: 'Vibe - 一种可以自由创作、获取回报的生活方式',
             text3: '我们希望帮助这样的个体用自己的 vibe 去创作，获得收益',
           },
           vibeFriends: {
