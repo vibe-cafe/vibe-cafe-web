@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import MenuBar from '@/components/MenuBar';
 import MacWindow from '@/components/MacWindow';
+import Image from 'next/image';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -18,8 +19,15 @@ export default function Home() {
           {/* Profile Window */}
           <MacWindow title="About.txt" className="md:col-span-2 lg:col-span-3">
             <div className="flex items-center gap-6">
-              <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-4xl">👾</span>
+              <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3">
+                <Image
+                  src="/images/vibe-logo.jpeg"
+                  alt="Vibe Cafe Logo"
+                  width={72}
+                  height={72}
+                  className="w-full h-full object-contain"
+                  priority
+                />
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-2">{t('hero.title')}</h1>
