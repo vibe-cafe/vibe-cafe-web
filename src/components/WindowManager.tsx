@@ -2,6 +2,17 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import MacWindow from './MacWindow';
 
+interface WindowPositionChangeEvent {
+  id: string;
+  position: { x: number; y: number };
+}
+
+declare global {
+  interface WindowEventMap {
+    'windowPositionChange': CustomEvent<WindowPositionChangeEvent>;
+  }
+}
+
 interface Window {
   id: string;
   title: string;
@@ -70,7 +81,7 @@ interface WindowManagerProps {
   size?: { width: number; height: number };
 }
 
-export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, isDeleted, size: initialSize }: WindowManagerProps) {
+export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, size: initialSize }: WindowManagerProps) {
   const [size, setSize] = useState(() => initialSize || { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
   const [isResizing, setIsResizing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -83,7 +94,7 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
   useEffect(() => {
     x.set(position.x);
     y.set(position.y);
-  }, [position.x, position.y]);
+  }, [position.x, position.y, x, y]);
 
   useEffect(() => {
     if (!isResizing) return;
@@ -122,7 +133,7 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
     setIsResizing(true);
   };
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = () => {
     const newPosition = { x: x.get(), y: y.get() };
     if (typeof window !== 'undefined') {
       const windowEvent = new CustomEvent('windowPositionChange', {
@@ -164,7 +175,6 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
 
 export const useWindowManager = (initialWindows: Window[]) => {
   const [windows, setWindows] = useState<Window[]>(initialWindows);
-  const [focusedId, setFocusedId] = useState<string | null>(null);
 
   const closeWindow = useCallback((id: string) => {
     setWindows((prev) => {
@@ -219,6 +229,18 @@ export const useWindowManager = (initialWindows: Window[]) => {
     );
   }, []);
 
+  useEffect(() => {
+    const handleWindowPositionChange = (event: CustomEvent<{ id: string; position: { x: number; y: number } }>) => {
+      const { id, position } = event.detail;
+      updateWindowPosition(id, position.x, position.y);
+    };
+
+    window.addEventListener('windowPositionChange', handleWindowPositionChange as EventListener);
+    return () => {
+      window.removeEventListener('windowPositionChange', handleWindowPositionChange as EventListener);
+    };
+  }, [updateWindowPosition]);
+
   const getMaxZIndex = () => {
     return Math.max(...windows.map(w => w.zIndex), 0);
   };
@@ -255,6 +277,7 @@ export const useWindowManager = (initialWindows: Window[]) => {
     toggleWindow,
     closeWindow,
     focusWindow,
-    emptyTrash
+    emptyTrash,
+    updateWindowPosition
   };
 } 

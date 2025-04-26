@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 
 export default function MenuBar() {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'zh' ? 'en' : 'zh';
