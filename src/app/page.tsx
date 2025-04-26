@@ -4,48 +4,55 @@ import { useTranslation } from 'react-i18next';
 import MenuBar from '@/components/MenuBar';
 import Image from 'next/image';
 import FileIcon from '@/components/FileIcon';
-import { ManagedWindow, useWindowManager } from '@/components/WindowManager';
+import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/components/WindowManager';
 import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/MacWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
-const INITIAL_WINDOWS = [
+const WINDOWS_CONFIG = [
   { 
     id: 'about',
     title: 'About.txt',
     isOpen: true,
     zIndex: 1,
-    position: { x: 80, y: 40 }
   },
   { 
     id: 'manifesto',
     title: 'Manifesto.txt',
     isOpen: true,
     zIndex: 2,
-    position: { x: 160, y: 120 }
   },
   { 
     id: 'vibeFriends',
     title: 'VibeFriends.app',
     isOpen: true,
     zIndex: 3,
-    position: { x: 240, y: 200 }
   },
   { 
     id: 'vibeCafe',
     title: 'VibeCafe.app',
     isOpen: true,
     zIndex: 4,
-    position: { x: 320, y: 280 }
   },
   { 
     id: 'contact',
     title: 'Contact.app',
     isOpen: true,
     zIndex: 5,
-    position: { x: 400, y: 360 }
+  },
+  {
+    id: 'code',
+    title: 'code.mov',
+    isOpen: false,
+    zIndex: 6,
+    size: { width: 400, height: 400 }
   },
 ];
+
+const INITIAL_WINDOWS = WINDOWS_CONFIG.map((window, index) => ({
+  ...window,
+  position: calculateInitialPosition(index, WINDOWS_CONFIG.length)
+}));
 
 export default function Home() {
   const { t } = useTranslation();
@@ -81,10 +88,87 @@ export default function Home() {
       type: 'app' as const,
       icon: '📧',
     },
+    {
+      id: 'code',
+      name: 'code.mov',
+      type: 'app' as const,
+      icon: '🎬',
+    },
   ];
 
+  const renderWindowContent = (windowId: string) => {
+    switch (windowId) {
+      case 'about':
+        return (
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-black rounded-lg flex items-center justify-center p-2 md:p-3">
+              <Image
+                src="/images/vibe-logo.jpeg"
+                alt="Vibe Cafe Logo"
+                width={72}
+                height={72}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
+            <div className="text-center md:text-left">
+              <h1 className="text-xl md:text-2xl font-bold mb-2">{t('hero.title')}</h1>
+              <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
+            </div>
+          </div>
+        );
+      case 'manifesto':
+        return (
+          <div className="space-y-3 text-sm">
+            <p>{t('manifesto.text1')}</p>
+            <p>{t('manifesto.text2')}</p>
+            <p>{t('manifesto.text3')}</p>
+          </div>
+        );
+      case 'vibeFriends':
+        return (
+          <div className="space-y-2 md:space-y-3">
+            <h3 className="font-bold text-base md:text-lg">{t('vibeFriends.title')}</h3>
+            <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
+          </div>
+        );
+      case 'vibeCafe':
+        return (
+          <div className="space-y-2 md:space-y-3">
+            <h3 className="font-bold text-base md:text-lg">{t('vibeCafe.title')}</h3>
+            <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
+          </div>
+        );
+      case 'contact':
+        return (
+          <div className="space-y-2">
+            <h3 className="font-bold text-base">{t('contact.title')}</h3>
+            <button 
+              className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
+            >
+              {t('contact.button')}
+            </button>
+          </div>
+        );
+      case 'code':
+        return (
+          <div className="w-full h-full absolute inset-0 aspect-square">
+            <video
+              className="w-full h-full object-cover"
+              src="/videos/vibe-cafe.mov"
+              autoPlay
+              loop
+              playsInline
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <main className={`min-h-screen bg-[#9C9C9C] font-chicago ${isMobile ? 'pt-2' : 'pt-6'}`}>
+    <main className={`min-h-screen bg-[#9C9C9C] font-chicago ${isMobile ? 'pt-8' : 'pt-6'}`}>
       <MenuBar />
       
       {/* Desktop Icons - Hide on Mobile */}
@@ -128,151 +212,37 @@ export default function Home() {
       <div className={`relative ${isMobile ? 'px-2 space-y-3 pb-4' : 'container mx-auto px-4 pt-8'}`}>
         {isMobile ? (
           // Mobile: Stack windows vertically
-          windows.map((window, index) => {
-            if (!window.isOpen) return null;
-            const content = (() => {
-              switch (window.id) {
-                case 'about':
-                  return (
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-20 h-20 bg-black rounded-lg flex items-center justify-center p-2">
-                        <Image
-                          src="/images/vibe-logo.jpeg"
-                          alt="Vibe Cafe Logo"
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-contain"
-                          priority
-                        />
-                      </div>
-                      <div className="text-center">
-                        <h1 className="text-xl font-bold mb-2">{t('hero.title')}</h1>
-                        <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
-                      </div>
-                    </div>
-                  );
-                case 'manifesto':
-                  return (
-                    <div className="space-y-3 text-sm">
-                      <p>{t('manifesto.text1')}</p>
-                      <p>{t('manifesto.text2')}</p>
-                      <p>{t('manifesto.text3')}</p>
-                    </div>
-                  );
-                case 'vibeFriends':
-                  return (
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-base">{t('vibeFriends.title')}</h3>
-                      <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
-                    </div>
-                  );
-                case 'vibeCafe':
-                  return (
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-base">{t('vibeCafe.title')}</h3>
-                      <p className="text-sm text-gray-600">{t('vibeCafe.description')}</p>
-                      <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
-                    </div>
-                  );
-                case 'contact':
-                  return (
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-base">{t('contact.title')}</h3>
-                      <button 
-                        className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
-                      >
-                        {t('contact.button')}
-                      </button>
-                    </div>
-                  );
-                default:
-                  return null;
-              }
-            })();
-
+          windows.map((window) => {
+            if (!window.isOpen || window.isDeleted) return null;
             return (
-              <div key={window.id} className={`w-full ${index === 0 ? 'mt-14' : ''}`}>
-                <MacWindow
-                  title={window.title}
-                  isMobile={true}
-                >
-                  {content}
-                </MacWindow>
-              </div>
+              <MacWindow
+                key={window.id}
+                title={window.title}
+                onClose={() => closeWindow(window.id)}
+              >
+                {renderWindowContent(window.id)}
+              </MacWindow>
             );
           })
         ) : (
-          // Desktop: Keep existing draggable windows
-          <AnimatePresence>
-            {windows.map(window => {
-              const content = (() => {
-                switch (window.id) {
-                  case 'about':
-                    return (
-                      <div className="flex items-center gap-6">
-                        <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3">
-                          <Image
-                            src="/images/vibe-logo.jpeg"
-                            alt="Vibe Cafe Logo"
-                            width={72}
-                            height={72}
-                            className="w-full h-full object-contain"
-                            priority
-                          />
-                        </div>
-                        <div>
-                          <h1 className="text-2xl font-bold mb-2">{t('hero.title')}</h1>
-                          <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
-                        </div>
-                      </div>
-                    );
-                  case 'manifesto':
-                    return (
-                      <div className="space-y-3 text-sm">
-                        <p>{t('manifesto.text1')}</p>
-                        <p>{t('manifesto.text2')}</p>
-                        <p>{t('manifesto.text3')}</p>
-                      </div>
-                    );
-                  case 'vibeFriends':
-                    return (
-                      <div className="space-y-3">
-                        <h3 className="font-bold text-lg">{t('vibeFriends.title')}</h3>
-                        <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
-                      </div>
-                    );
-                  case 'vibeCafe':
-                    return (
-                      <div className="space-y-3">
-                        <h3 className="font-bold text-lg">{t('vibeCafe.title')}</h3>
-                        <p className="text-sm text-gray-600">{t('vibeCafe.description')}</p>
-                        <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
-                      </div>
-                    );
-                  case 'contact':
-                    return (
-                      <div className="space-y-3">
-                        <h3 className="font-bold text-lg">{t('contact.title')}</h3>
-                        <button 
-                          className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
-                        >
-                          {t('contact.button')}
-                        </button>
-                      </div>
-                    );
-                  default:
-                    return null;
-                }
-              })();
-
+          // Desktop: Draggable windows
+          <AnimatePresence mode="popLayout">
+            {windows.map((window) => {
+              if (!window.isOpen || window.isDeleted) return null;
               return (
                 <ManagedWindow
                   key={window.id}
-                  {...window}
+                  id={window.id}
+                  title={window.title}
+                  isOpen={window.isOpen}
                   onClose={() => closeWindow(window.id)}
                   onFocus={() => focusWindow(window.id)}
+                  zIndex={window.zIndex}
+                  position={window.position}
+                  isDeleted={window.isDeleted}
+                  size={window.size}
                 >
-                  {content}
+                  {renderWindowContent(window.id)}
                 </ManagedWindow>
               );
             })}

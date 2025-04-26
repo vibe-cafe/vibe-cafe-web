@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import MacWindow from './MacWindow';
 
@@ -24,7 +24,7 @@ const CLOSE_WINDOW_DELAY = 200;
 const DELETE_ICON_DELAY = 100;
 
 // Calculate initial window positions in a grid layout
-const calculateInitialPosition = (
+export const calculateInitialPosition = (
   index: number, 
   totalWindows: number,
   viewport = DEFAULT_VIEWPORT
@@ -67,10 +67,11 @@ interface WindowManagerProps {
   zIndex: number;
   position: { x: number; y: number };
   isDeleted?: boolean;
+  size?: { width: number; height: number };
 }
 
-export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, isDeleted }: WindowManagerProps) {
-  const [size, setSize] = useState({ width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
+export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, isDeleted, size: initialSize }: WindowManagerProps) {
+  const [size, setSize] = useState(() => initialSize || { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
   const [isResizing, setIsResizing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [startSize, setStartSize] = useState({ width: 0, height: 0 });
@@ -161,78 +162,65 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
   );
 }
 
-export function useWindowManager(initialWindows: Window[]) {
-  const [windows, setWindows] = useState(() => {
-    return initialWindows.map((w, index) => {
-      const initialPos = calculateInitialPosition(index, initialWindows.length);
-      return {
-        ...w,
-        position: w.lastPosition || initialPos,
-        lastPosition: w.lastPosition || initialPos,
-        isDeleted: false
-      };
+export const useWindowManager = (initialWindows: Window[]) => {
+  const [windows, setWindows] = useState<Window[]>(initialWindows);
+  const [focusedId, setFocusedId] = useState<string | null>(null);
+
+  const closeWindow = useCallback((id: string) => {
+    setWindows((prev) => {
+      const windowToClose = prev.find((w) => w.id === id);
+      if (!windowToClose) return prev;
+
+      // Store the current position before closing
+      const updatedWindows = prev.map((w) => {
+        if (w.id === id) {
+          return {
+            ...w,
+            isOpen: false,
+            lastPosition: { x: w.position.x, y: w.position.y },
+          };
+        }
+        return w;
+      });
+      return updatedWindows;
     });
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const viewport = {
-      width: window.innerWidth,
-      height: window.innerHeight
-    };
-
-    setWindows(prev => prev.map((w, index) => {
-      if (w.lastPosition) return w;
-      const newPos = calculateInitialPosition(index, prev.length, viewport);
-      return {
-        ...w,
-        position: newPos,
-        lastPosition: newPos
-      };
-    }));
   }, []);
 
-  useEffect(() => {
-    const handlePositionChange = (event: any) => {
-      const { id, position } = event.detail;
-      setWindows(prev => prev.map(w => 
-        w.id === id ? { 
-          ...w, 
-          position,
-          lastPosition: position 
-        } : w
-      ));
-    };
+  const toggleWindow = useCallback((id: string) => {
+    setWindows((prev) => {
+      const windowToToggle = prev.find((w) => w.id === id);
+      if (!windowToToggle) return prev;
 
-    window.addEventListener('windowPositionChange', handlePositionChange);
-    return () => window.removeEventListener('windowPositionChange', handlePositionChange);
+      return prev.map((w) => {
+        if (w.id === id) {
+          return {
+            ...w,
+            isOpen: !w.isOpen,
+            // Restore last position when reopening
+            ...((!w.isOpen && w.lastPosition) ? {
+              position: w.lastPosition
+            } : {})
+          };
+        }
+        return w;
+      });
+    });
+  }, []);
+
+  const updateWindowPosition = useCallback((id: string, newX: number, newY: number) => {
+    setWindows((prev) => 
+      prev.map((w) => 
+        w.id === id ? {
+          ...w,
+          position: { x: newX, y: newY },
+          lastPosition: { x: newX, y: newY }
+        } : w
+      )
+    );
   }, []);
 
   const getMaxZIndex = () => {
     return Math.max(...windows.map(w => w.zIndex), 0);
-  };
-
-  const toggleWindow = (id: string) => {
-    setWindows(prev => prev.map(w => {
-      if (w.id === id) {
-        const newPosition = !w.isOpen ? (w.lastPosition || w.position) : w.position;
-        return {
-          ...w,
-          isOpen: !w.isOpen,
-          zIndex: !w.isOpen ? getMaxZIndex() + 1 : w.zIndex,
-          position: newPosition,
-          lastPosition: newPosition
-        };
-      }
-      return w;
-    }));
-  };
-
-  const closeWindow = (id: string) => {
-    setWindows(prev => prev.map(w => 
-      w.id === id ? { ...w, isOpen: false } : w
-    ));
   };
 
   const focusWindow = (id: string) => {
