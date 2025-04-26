@@ -47,7 +47,7 @@ const INITIAL_WINDOWS = [
 
 export default function Home() {
   const { t } = useTranslation();
-  const { windows, toggleWindow, closeWindow, focusWindow } = useWindowManager(INITIAL_WINDOWS);
+  const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
 
   return (
     <main className="min-h-screen bg-[#9C9C9C] font-chicago pt-6">
@@ -55,38 +55,61 @@ export default function Home() {
       
       {/* Desktop Icons */}
       <div className="fixed left-4 top-20 flex flex-col gap-4">
+        <AnimatePresence>
+          {!windows.find(w => w.id === 'about')?.isDeleted && (
+            <FileIcon
+              name="About.txt"
+              type="txt"
+              onClick={() => toggleWindow('about')}
+              isOpen={windows.find(w => w.id === 'about')?.isOpen || false}
+            />
+          )}
+          {!windows.find(w => w.id === 'manifesto')?.isDeleted && (
+            <FileIcon
+              name="Manifesto.txt"
+              type="txt"
+              onClick={() => toggleWindow('manifesto')}
+              isOpen={windows.find(w => w.id === 'manifesto')?.isOpen || false}
+            />
+          )}
+          {!windows.find(w => w.id === 'vibeFriends')?.isDeleted && (
+            <FileIcon
+              name="VibeFriends.app"
+              type="app"
+              icon="🧑‍🤝‍🧑"
+              onClick={() => toggleWindow('vibeFriends')}
+              isOpen={windows.find(w => w.id === 'vibeFriends')?.isOpen || false}
+            />
+          )}
+          {!windows.find(w => w.id === 'vibeCafe')?.isDeleted && (
+            <FileIcon
+              name="VibeCafe.app"
+              type="app"
+              icon="☕️"
+              onClick={() => toggleWindow('vibeCafe')}
+              isOpen={windows.find(w => w.id === 'vibeCafe')?.isOpen || false}
+            />
+          )}
+          {!windows.find(w => w.id === 'contact')?.isDeleted && (
+            <FileIcon
+              name="Contact.app"
+              type="app"
+              icon="📧"
+              onClick={() => toggleWindow('contact')}
+              isOpen={windows.find(w => w.id === 'contact')?.isOpen || false}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Trash Icon */}
+      <div className="fixed bottom-4 right-4">
         <FileIcon
-          name="About.txt"
-          type="txt"
-          onClick={() => toggleWindow('about')}
-          isOpen={windows.find(w => w.id === 'about')?.isOpen || false}
-        />
-        <FileIcon
-          name="Manifesto.txt"
-          type="txt"
-          onClick={() => toggleWindow('manifesto')}
-          isOpen={windows.find(w => w.id === 'manifesto')?.isOpen || false}
-        />
-        <FileIcon
-          name="VibeFriends.app"
+          name="Trash"
           type="app"
-          icon="🧑‍🤝‍🧑"
-          onClick={() => toggleWindow('vibeFriends')}
-          isOpen={windows.find(w => w.id === 'vibeFriends')?.isOpen || false}
-        />
-        <FileIcon
-          name="VibeCafe.app"
-          type="app"
-          icon="☕️"
-          onClick={() => toggleWindow('vibeCafe')}
-          isOpen={windows.find(w => w.id === 'vibeCafe')?.isOpen || false}
-        />
-        <FileIcon
-          name="Contact.app"
-          type="app"
-          icon="📧"
-          onClick={() => toggleWindow('contact')}
-          isOpen={windows.find(w => w.id === 'contact')?.isOpen || false}
+          icon="🗑️"
+          onClick={emptyTrash}
+          isOpen={false}
         />
       </div>
 
@@ -170,16 +193,6 @@ export default function Home() {
             );
           })}
         </AnimatePresence>
-
-        {/* Trash Icon */}
-        <div className="fixed bottom-4 right-4 flex flex-col items-center gap-4 z-20">
-          <FileIcon
-            name="Trash"
-            type="app"
-            onClick={() => {}}
-            isOpen={false}
-          />
-        </div>
       </div>
     </main>
   );
