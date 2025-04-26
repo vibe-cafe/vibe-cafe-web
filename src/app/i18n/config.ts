@@ -13,7 +13,7 @@ i18n
         translation: {
           hero: {
             title: 'VibeCafé',
-            subtitle: 'Keep the Vibe',
+            subtitle: 'Keep the vibe',
           },
           manifesto: {
             title: 'Vibe Manifesto',
@@ -53,7 +53,7 @@ i18n
         translation: {
           hero: {
             title: 'VibeCafé',
-            subtitle: 'Keep the Vibe',
+            subtitle: 'Keep the vibe',
           },
           manifesto: {
             title: 'Vibe 宣言',
