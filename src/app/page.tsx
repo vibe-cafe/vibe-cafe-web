@@ -49,62 +49,66 @@ export default function Home() {
   const { t } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
 
+  const fileIcons = [
+    {
+      id: 'about',
+      name: 'About.txt',
+      type: 'txt' as const,
+    },
+    {
+      id: 'manifesto',
+      name: 'Manifesto.txt',
+      type: 'txt' as const,
+    },
+    {
+      id: 'vibeFriends',
+      name: 'VibeFriends.app',
+      type: 'app' as const,
+      icon: '🧑‍🤝‍🧑',
+    },
+    {
+      id: 'vibeCafe',
+      name: 'VibeCafe.app',
+      type: 'app' as const,
+      icon: '☕️',
+    },
+    {
+      id: 'contact',
+      name: 'Contact.app',
+      type: 'app' as const,
+      icon: '📧',
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-[#9C9C9C] font-chicago pt-6">
       <MenuBar />
       
       {/* Desktop Icons */}
       <div className="fixed left-4 top-20 flex flex-col gap-4">
-        <AnimatePresence>
-          {!windows.find(w => w.id === 'about')?.isDeleted && (
-            <FileIcon
-              name="About.txt"
-              type="txt"
-              onClick={() => toggleWindow('about')}
-              isOpen={windows.find(w => w.id === 'about')?.isOpen || false}
-            />
-          )}
-          {!windows.find(w => w.id === 'manifesto')?.isDeleted && (
-            <FileIcon
-              name="Manifesto.txt"
-              type="txt"
-              onClick={() => toggleWindow('manifesto')}
-              isOpen={windows.find(w => w.id === 'manifesto')?.isOpen || false}
-            />
-          )}
-          {!windows.find(w => w.id === 'vibeFriends')?.isDeleted && (
-            <FileIcon
-              name="VibeFriends.app"
-              type="app"
-              icon="🧑‍🤝‍🧑"
-              onClick={() => toggleWindow('vibeFriends')}
-              isOpen={windows.find(w => w.id === 'vibeFriends')?.isOpen || false}
-            />
-          )}
-          {!windows.find(w => w.id === 'vibeCafe')?.isDeleted && (
-            <FileIcon
-              name="VibeCafe.app"
-              type="app"
-              icon="☕️"
-              onClick={() => toggleWindow('vibeCafe')}
-              isOpen={windows.find(w => w.id === 'vibeCafe')?.isOpen || false}
-            />
-          )}
-          {!windows.find(w => w.id === 'contact')?.isDeleted && (
-            <FileIcon
-              name="Contact.app"
-              type="app"
-              icon="📧"
-              onClick={() => toggleWindow('contact')}
-              isOpen={windows.find(w => w.id === 'contact')?.isOpen || false}
-            />
-          )}
+        <AnimatePresence mode="popLayout">
+          {fileIcons.map(icon => {
+            const window = windows.find(w => w.id === icon.id);
+            if (window?.isDeleted) return null;
+            
+            return (
+              <FileIcon
+                key={icon.id}
+                name={icon.name}
+                type={icon.type}
+                icon={icon.icon}
+                onClick={() => toggleWindow(icon.id)}
+                isOpen={window?.isOpen || false}
+              />
+            );
+          })}
         </AnimatePresence>
       </div>
 
       {/* Trash Icon */}
       <div className="fixed bottom-4 right-4">
         <FileIcon
+          key="trash"
           name="Trash"
           type="app"
           icon="🗑️"
@@ -180,13 +184,9 @@ export default function Home() {
             return (
               <ManagedWindow
                 key={window.id}
-                id={window.id}
-                title={window.title}
-                isOpen={window.isOpen}
+                {...window}
                 onClose={() => closeWindow(window.id)}
                 onFocus={() => focusWindow(window.id)}
-                zIndex={window.zIndex}
-                position={window.position}
               >
                 {content}
               </ManagedWindow>
