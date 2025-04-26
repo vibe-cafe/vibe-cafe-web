@@ -15,7 +15,7 @@ export default function LanguageSwitcher() {
       animate={{ opacity: 1 }}
       transition={{ delay: 1 }}
       onClick={toggleLanguage}
-      className="fixed top-8 right-8 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300 text-sm tracking-wide"
+      className="m-8 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all duration-300 text-sm tracking-wide font-mono"
     >
       {i18n.language === 'zh' ? 'EN' : '中文'}
     </motion.button>

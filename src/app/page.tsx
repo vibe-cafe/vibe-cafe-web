@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import HeroBackground from '@/components/HeroBackground';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -14,11 +15,17 @@ export default function Home() {
 
   return (
     <main className="min-h-screen font-sans">
-      <LanguageSwitcher />
-      
       {/* Hero Section */}
-      <section className="h-screen flex items-center justify-center bg-gradient-to-b from-black via-black/95 to-[#0a0f18]">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background layers */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0f18]/90 to-[#0a0f18] z-0" />
+        <div className="absolute inset-0 z-10">
+          <HeroBackground />
+        </div>
+        <div className="absolute inset-0 bg-black/20 z-20" /> {/* Lighter overlay */}
+        
+        {/* Content */}
+        <div className="container mx-auto px-4 text-center relative z-30">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -35,6 +42,11 @@ export default function Home() {
               {t('hero.subtitle')}
             </motion.p>
           </motion.div>
+        </div>
+
+        {/* Language Switcher */}
+        <div className="absolute top-0 right-0 z-40">
+          <LanguageSwitcher />
         </div>
       </section>
 

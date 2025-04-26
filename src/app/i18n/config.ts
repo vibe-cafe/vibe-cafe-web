@@ -45,7 +45,7 @@ i18n
           contact: {
             title: 'Contact',
             description: 'Want to join the Vibe community or learn more about what we do?',
-            button: 'Get in Touch',
+            button: 'WeChat: VibeFriends',
           },
         },
       },
@@ -85,7 +85,7 @@ i18n
           contact: {
             title: '联系我们',
             description: '想加入Vibe社区或了解更多关于我们的信息？',
-            button: '联系我们',
+            button: '微信公众号：VibeFriends',
           },
         },
       },
