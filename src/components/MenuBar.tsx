@@ -15,9 +15,21 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { deskto
   return (
     <div className="fixed top-0 left-0 right-0 h-6 bg-white border-b border-black flex items-center px-2 z-50">
       <div className="flex items-center gap-4 text-xs font-chicago text-black relative">
-        {/* Apple Menu */}
+        {/* Apple/Windows Menu */}
         <div className="flex items-center">
-          <span className="text-lg leading-none">🍎</span>
+          {desktopStyle === 'mac' ? (
+            <span className="text-lg leading-none">🍎</span>
+          ) : (
+            // Classic Windows logo SVG
+            <span className="w-5 h-5 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="6" width="12" height="8" fill="#00ADEF" stroke="#000" strokeWidth="1"/>
+                <rect x="2" y="16" width="12" height="8" fill="#FFD900" stroke="#000" strokeWidth="1"/>
+                <rect x="16" y="6" width="14" height="8" fill="#F1511B" stroke="#000" strokeWidth="1"/>
+                <rect x="16" y="16" width="14" height="8" fill="#7CBB00" stroke="#000" strokeWidth="1"/>
+              </svg>
+            </span>
+          )}
         </div>
 
         {/* File Menu */}
