@@ -31,7 +31,7 @@ i18n
             comingSoon: 'Coming soon!',
           },
           contact: {
-            title: 'Contact Us',
+            title: 'Subscribe Us',
             button: 'WeChat Official: VibeFriends',
           },
         },
@@ -58,7 +58,7 @@ i18n
             comingSoon: '敬请期待',
           },
           contact: {
-            title: '联系我们',
+            title: '关注我们',
             button: '微信公众号：VibeFriends',
           },
         },
