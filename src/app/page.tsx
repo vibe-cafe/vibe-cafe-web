@@ -8,7 +8,7 @@ import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/com
 import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/MacWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const WINDOWS_CONFIG = [
   { 
@@ -56,10 +56,44 @@ const INITIAL_WINDOWS = WINDOWS_CONFIG.map((window, index) => ({
 }));
 
 export default function Home() {
-  const { t } = useTranslation();
+  const [hydrated, setHydrated] = useState(false);
+  const { t, i18n } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile } = useWindowSize();
-  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows'>('mac');
+  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows') || 'mac';
+    }
+    return 'mac';
+  });
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // Language persistence
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('language');
+      if (savedLang && savedLang !== i18n.language) {
+        i18n.changeLanguage(savedLang);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('desktopStyle', desktopStyle);
+    }
+  }, [desktopStyle]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', i18n.language);
+    }
+  }, [i18n.language]);
+
+  if (!hydrated) return null;
 
   const fileIcons = [
     {

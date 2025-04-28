@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface MacWindowProps {
   title: string;
@@ -14,6 +14,13 @@ interface MacWindowProps {
 
 export default function MacWindow({ title, children, className = '', onClose, onStartResize, isMobile = false, windowsStyle = false }: MacWindowProps) {
   const [isCloseHovered, setIsCloseHovered] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) return null;
 
   if (isMobile) {
     if (windowsStyle) {
