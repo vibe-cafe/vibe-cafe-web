@@ -73,6 +73,29 @@ export default function MacWindow({ title, children, className = '', onClose, on
         <div className="flex-1 p-4 overflow-auto relative">
           {children}
         </div>
+        {/* Resize Handle */}
+        {onStartResize && (
+          <div 
+            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              onStartResize();
+            }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="opacity-50"
+            >
+              <path d="M8 8H15V15H8V8Z" fill="black" fillOpacity="0.2" />
+              <path d="M11 11H15V15H11V11Z" fill="black" fillOpacity="0.3" />
+              <path d="M14 14H15V15H14V14Z" fill="black" fillOpacity="0.4" />
+            </svg>
+          </div>
+        )}
       </div>
     );
   }
