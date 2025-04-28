@@ -100,7 +100,7 @@ export default function Home() {
     switch (windowId) {
       case 'about':
         return (
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 text-black">
             <div className="w-20 h-20 md:w-24 md:h-24 bg-black rounded-lg flex items-center justify-center p-2 md:p-3">
               <Image
                 src="/images/vibe-logo.jpeg"
@@ -112,37 +112,37 @@ export default function Home() {
               />
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-xl md:text-2xl font-bold mb-2">{t('hero.title')}</h1>
-              <p className="text-sm text-gray-600">{t('hero.subtitle')}</p>
+              <h1 className="text-xl md:text-2xl font-bold mb-2 text-black">{t('hero.title')}</h1>
+              <p className="text-sm text-gray-800">{t('hero.subtitle')}</p>
             </div>
           </div>
         );
       case 'manifesto':
         return (
-          <div className="space-y-3 text-sm">
-            <p>{t('manifesto.text1')}</p>
-            <p>{t('manifesto.text2')}</p>
-            <p>{t('manifesto.text3')}</p>
+          <div className="space-y-3 text-sm text-black">
+            <p className="text-gray-800">{t('manifesto.text1')}</p>
+            <p className="text-gray-800">{t('manifesto.text2')}</p>
+            <p className="text-gray-800">{t('manifesto.text3')}</p>
           </div>
         );
       case 'vibeFriends':
         return (
-          <div className="space-y-2 md:space-y-3">
-            <h3 className="font-bold text-base md:text-lg">{t('vibeFriends.title')}</h3>
-            <p className="text-sm text-gray-600">{t('vibeFriends.description')}</p>
+          <div className="space-y-2 md:space-y-3 text-black">
+            <h3 className="font-bold text-base md:text-lg text-black">{t('vibeFriends.title')}</h3>
+            <p className="text-sm text-gray-800">{t('vibeFriends.description')}</p>
           </div>
         );
       case 'vibeCafe':
         return (
-          <div className="space-y-2 md:space-y-3">
-            <h3 className="font-bold text-base md:text-lg">{t('vibeCafe.title')}</h3>
-            <p className="text-xs text-gray-500 italic">{t('vibeCafe.comingSoon')}</p>
+          <div className="space-y-2 md:space-y-3 text-black">
+            <h3 className="font-bold text-base md:text-lg text-black">{t('vibeCafe.title')}</h3>
+            <p className="text-xs text-gray-700 italic">{t('vibeCafe.comingSoon')}</p>
           </div>
         );
       case 'contact':
         return (
-          <div className="space-y-2">
-            <h3 className="font-bold text-base">{t('contact.title')}</h3>
+          <div className="space-y-2 text-black">
+            <h3 className="font-bold text-base text-black">{t('contact.title')}</h3>
             <button 
               className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
             >
