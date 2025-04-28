@@ -9,12 +9,35 @@ interface MacWindowProps {
   onClose?: () => void;
   onStartResize?: () => void;
   isMobile?: boolean;
+  windowsStyle?: boolean;
 }
 
-export default function MacWindow({ title, children, className = '', onClose, onStartResize, isMobile = false }: MacWindowProps) {
+export default function MacWindow({ title, children, className = '', onClose, onStartResize, isMobile = false, windowsStyle = false }: MacWindowProps) {
   const [isCloseHovered, setIsCloseHovered] = useState(false);
 
   if (isMobile) {
+    if (windowsStyle) {
+      return (
+        <div className={`bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col font-[MS_Sans_Serif] ${className}`}>
+          {/* Windows Title Bar */}
+          <div className="h-7 bg-[#000080] border-b-2 border-[#fff] flex items-center px-2 select-none">
+            <div className="flex-1 text-left text-white text-xs font-bold tracking-wide">
+              {title}
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+              className="ml-2 w-5 h-5 bg-[#C0C0C0] border-2 border-[#000] flex items-center justify-center text-[#000] text-lg font-bold leading-none hover:bg-[#ff0000] hover:text-white"
+            >
+              ×
+            </button>
+          </div>
+          {/* Window Content */}
+          <div className="flex-1 p-4 overflow-auto relative">
+            {children}
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={`bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col ${className}`}>
         {/* Window Title Bar */}
@@ -23,7 +46,29 @@ export default function MacWindow({ title, children, className = '', onClose, on
             {title}
           </div>
         </div>
-        
+        {/* Window Content */}
+        <div className="flex-1 p-4 overflow-auto relative">
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  if (windowsStyle) {
+    return (
+      <div className={`bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-full flex flex-col font-[MS_Sans_Serif] ${className}`}>
+        {/* Windows Title Bar */}
+        <div className="h-7 bg-[#000080] border-b-2 border-[#fff] flex items-center px-2 select-none">
+          <div className="flex-1 text-left text-white text-xs font-bold tracking-wide">
+            {title}
+          </div>
+          <button
+            onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+            className="ml-2 w-5 h-5 bg-[#C0C0C0] border-2 border-[#000] flex items-center justify-center text-[#000] text-lg font-bold leading-none hover:bg-[#ff0000] hover:text-white"
+          >
+            ×
+          </button>
+        </div>
         {/* Window Content */}
         <div className="flex-1 p-4 overflow-auto relative">
           {children}
@@ -61,12 +106,10 @@ export default function MacWindow({ title, children, className = '', onClose, on
           {title}
         </div>
       </div>
-      
       {/* Window Content */}
       <div className="flex-1 p-4 overflow-auto relative">
         {children}
       </div>
-
       {/* Resize Handle */}
       {onStartResize && (
         <div 

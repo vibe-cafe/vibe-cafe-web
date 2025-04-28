@@ -8,6 +8,7 @@ import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/com
 import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/MacWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { useState } from 'react';
 
 const WINDOWS_CONFIG = [
   { 
@@ -58,6 +59,7 @@ export default function Home() {
   const { t } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile } = useWindowSize();
+  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows'>('mac');
 
   const fileIcons = [
     {
@@ -168,8 +170,8 @@ export default function Home() {
   };
 
   return (
-    <main className={`min-h-screen bg-[#9C9C9C] font-chicago ${isMobile ? 'pt-8' : 'pt-6'}`}>
-      <MenuBar />
+    <main className={`min-h-screen ${desktopStyle === 'mac' ? 'bg-[#9C9C9C] font-chicago' : 'bg-[#008080] font-[\'MS_Sans_Serif\']'} ${isMobile ? 'pt-8' : 'pt-6'}`}>
+      <MenuBar desktopStyle={desktopStyle} onChangeDesktopStyle={setDesktopStyle} />
       
       {/* Desktop Icons - Hide on Mobile */}
       {!isMobile && (
@@ -219,6 +221,9 @@ export default function Home() {
                 key={window.id}
                 title={window.title}
                 onClose={() => closeWindow(window.id)}
+                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
+                isMobile={isMobile}
+                windowsStyle={desktopStyle === 'windows'}
               >
                 {renderWindowContent(window.id)}
               </MacWindow>
@@ -241,6 +246,8 @@ export default function Home() {
                   position={window.position}
                   isDeleted={window.isDeleted}
                   size={window.size}
+                  className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
+                  windowsStyle={desktopStyle === 'windows'}
                 >
                   {renderWindowContent(window.id)}
                 </ManagedWindow>

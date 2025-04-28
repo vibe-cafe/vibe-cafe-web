@@ -1,9 +1,11 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
-export default function MenuBar() {
+export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { desktopStyle: 'mac' | 'windows'; onChangeDesktopStyle: (style: 'mac' | 'windows') => void }) {
   const { i18n } = useTranslation();
+  const [viewDropdownOpen, setViewDropdownOpen] = useState(false);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'zh' ? 'en' : 'zh';
@@ -12,7 +14,7 @@ export default function MenuBar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 h-6 bg-white border-b border-black flex items-center px-2 z-50">
-      <div className="flex items-center gap-4 text-xs font-chicago text-black">
+      <div className="flex items-center gap-4 text-xs font-chicago text-black relative">
         {/* Apple Menu */}
         <div className="flex items-center">
           <span className="text-lg leading-none">🍎</span>
@@ -28,10 +30,33 @@ export default function MenuBar() {
           Edit
         </button>
 
-        {/* View Menu */}
-        <button className="hover:bg-black hover:text-white px-2 py-0.5 text-black">
-          View
-        </button>
+        {/* View Menu with Dropdown */}
+        <div className="relative">
+          <button
+            className="hover:bg-black hover:text-white px-2 py-0.5 text-black"
+            onClick={() => setViewDropdownOpen(v => !v)}
+          >
+            View
+          </button>
+          {viewDropdownOpen && (
+            <div className="absolute left-0 mt-1 w-32 bg-white border border-black rounded shadow z-50">
+              <button
+                className={`flex items-center w-full px-3 py-1 text-left hover:bg-gray-200 ${desktopStyle === 'mac' ? 'font-bold' : ''}`}
+                onClick={() => { onChangeDesktopStyle('mac'); setViewDropdownOpen(false); }}
+              >
+                {desktopStyle === 'mac' && <span className="mr-2">✔</span>}
+                Mac
+              </button>
+              <button
+                className={`flex items-center w-full px-3 py-1 text-left hover:bg-gray-200 ${desktopStyle === 'windows' ? 'font-bold' : ''}`}
+                onClick={() => { onChangeDesktopStyle('windows'); setViewDropdownOpen(false); }}
+              >
+                {desktopStyle === 'windows' && <span className="mr-2">✔</span>}
+                Windows
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Language Switcher */}
         <button 

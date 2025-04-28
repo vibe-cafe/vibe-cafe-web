@@ -79,9 +79,11 @@ interface WindowManagerProps {
   position: { x: number; y: number };
   isDeleted?: boolean;
   size?: { width: number; height: number };
+  className?: string;
+  windowsStyle?: boolean;
 }
 
-export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, size: initialSize }: WindowManagerProps) {
+export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, size: initialSize, className = '', windowsStyle = false }: WindowManagerProps) {
   const [size, setSize] = useState(() => initialSize || { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
   const [isResizing, setIsResizing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -166,6 +168,8 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
         title={title} 
         onClose={onClose}
         onStartResize={handleStartResize}
+        className={className}
+        windowsStyle={windowsStyle}
       >
         {children}
       </MacWindow>
