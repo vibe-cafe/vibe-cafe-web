@@ -6,6 +6,7 @@ import { useState } from 'react';
 export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { desktopStyle: 'mac' | 'windows'; onChangeDesktopStyle: (style: 'mac' | 'windows') => void }) {
   const { i18n } = useTranslation();
   const [viewDropdownOpen, setViewDropdownOpen] = useState(false);
+  const [vibeCafeDropdownOpen, setVibeCafeDropdownOpen] = useState(false);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'zh' ? 'en' : 'zh';
@@ -32,10 +33,48 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { deskto
           )}
         </div>
 
-        {/* File Menu */}
-        <button className="hover:bg-black hover:text-white px-2 py-0.5 text-black">
-          File
-        </button>
+        {/* VibeCafé Menu with Dropdown */}
+        <div className="relative">
+          <button
+            className="hover:bg-black hover:text-white px-2 py-0.5 text-black"
+            onClick={() => setVibeCafeDropdownOpen(v => !v)}
+          >
+            VibeCafé
+          </button>
+          {vibeCafeDropdownOpen && (
+            <div className="absolute left-0 mt-1 w-40 bg-white border border-black rounded shadow z-50">
+              <button
+                className="flex items-center w-full px-3 py-1 text-left hover:bg-gray-200"
+                onClick={() => {
+                  // Dispatch custom event to open new window
+                  window.dispatchEvent(new CustomEvent('openNewWindow'));
+                  setVibeCafeDropdownOpen(false);
+                }}
+              >
+                New Window
+              </button>
+              <button
+                className="flex items-center w-full px-3 py-1 text-left hover:bg-gray-200"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  setVibeCafeDropdownOpen(false);
+                }}
+              >
+                Copy link
+              </button>
+              <button
+                className="flex items-center w-full px-3 py-1 text-left hover:bg-gray-200"
+                onClick={() => {
+                  const url = encodeURIComponent(window.location.href);
+                  window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+                  setVibeCafeDropdownOpen(false);
+                }}
+              >
+                Share to X
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Edit Menu */}
         <button className="hover:bg-black hover:text-white px-2 py-0.5 text-black">

@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/MacWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
+import NoteWindow from '@/components/NoteWindow';
 
 const WINDOWS_CONFIG = [
   { 
@@ -60,10 +61,22 @@ export default function Home() {
     }
     return 'mac';
   });
+  const [noteWindows, setNoteWindows] = useState<{ id: string; position: { x: number; y: number } }[]>([]);
 
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    const handleNewWindow = () => {
+      const id = `note-${Date.now()}`;
+      const position = calculateInitialPosition(noteWindows.length, noteWindows.length + 1);
+      setNoteWindows(prev => [...prev, { id, position }]);
+    };
+
+    window.addEventListener('openNewWindow', handleNewWindow);
+    return () => window.removeEventListener('openNewWindow', handleNewWindow);
+  }, [noteWindows.length]);
 
   // Language persistence
   useEffect(() => {
@@ -253,29 +266,52 @@ export default function Home() {
           })
         ) : (
           // Desktop: Draggable windows
-          <AnimatePresence mode="popLayout">
-            {windows.map((window) => {
-              if (!window.isOpen || window.isDeleted) return null;
-              return (
+          <>
+            <AnimatePresence mode="popLayout">
+              {windows.map((window) => {
+                if (!window.isOpen || window.isDeleted) return null;
+                return (
+                  <ManagedWindow
+                    key={window.id}
+                    id={window.id}
+                    title={window.title}
+                    isOpen={window.isOpen}
+                    onClose={() => closeWindow(window.id)}
+                    onFocus={() => focusWindow(window.id)}
+                    zIndex={window.zIndex}
+                    position={window.position}
+                    isDeleted={window.isDeleted}
+                    size={window.size}
+                    className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
+                    windowsStyle={desktopStyle === 'windows'}
+                  >
+                    {renderWindowContent(window.id)}
+                  </ManagedWindow>
+                );
+              })}
+            </AnimatePresence>
+
+            {/* Note Windows */}
+            <AnimatePresence mode="popLayout">
+              {noteWindows.map(({ id, position }) => (
                 <ManagedWindow
-                  key={window.id}
-                  id={window.id}
-                  title={window.title}
-                  isOpen={window.isOpen}
-                  onClose={() => closeWindow(window.id)}
-                  onFocus={() => focusWindow(window.id)}
-                  zIndex={window.zIndex}
-                  position={window.position}
-                  isDeleted={window.isDeleted}
-                  size={window.size}
+                  key={id}
+                  id={id}
+                  title="Untitled.txt"
+                  isOpen={true}
+                  onClose={() => setNoteWindows(prev => prev.filter(w => w.id !== id))}
+                  onFocus={() => focusWindow(id)}
+                  zIndex={windows.length + noteWindows.length}
+                  position={position}
+                  size={{ width: 400, height: 300 }}
                   className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
                   windowsStyle={desktopStyle === 'windows'}
                 >
-                  {renderWindowContent(window.id)}
+                  <NoteWindow windowsStyle={desktopStyle === 'windows'} />
                 </ManagedWindow>
-              );
-            })}
-          </AnimatePresence>
+              ))}
+            </AnimatePresence>
+          </>
         )}
       </div>
     </main>
