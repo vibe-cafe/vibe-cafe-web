@@ -55,9 +55,9 @@ export default function Home() {
   const { t, i18n } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile } = useWindowSize();
-  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows'>(() => {
+  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows') || 'mac';
+      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux') || 'mac';
     }
     return 'mac';
   });
@@ -133,6 +133,29 @@ export default function Home() {
     },
   ];
 
+  const getMainStyle = () => {
+    switch (desktopStyle) {
+      case 'windows':
+        return 'bg-[#008080] font-[\'MS_Sans_Serif\']';
+      case 'linux':
+        // Using a common Linux desktop color and font
+        return 'bg-[#4E5A65] font-[\'Liberation_Sans\']'; 
+      default: // mac
+        return 'bg-[#9C9C9C] font-chicago';
+    }
+  };
+
+  const getWindowStyle = (style: 'mac' | 'windows' | 'linux') => {
+    switch (style) {
+      case 'windows':
+        return 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']';
+      case 'linux':
+        return 'border border-[#6A6A6A] rounded shadow-md bg-[#DFDFDF] font-[\'Liberation_Sans\']';
+      default: // mac
+        return 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'; // Default Mac style for ManagedWindow
+    }
+  };
+
   const renderWindowContent = (windowId: string) => {
     switch (windowId) {
       case 'about':
@@ -205,7 +228,7 @@ export default function Home() {
   };
 
   return (
-    <main className={`min-h-screen ${desktopStyle === 'mac' ? 'bg-[#9C9C9C] font-chicago' : 'bg-[#008080] font-[\'MS_Sans_Serif\']'} ${isMobile ? 'pt-8' : 'pt-6'}`}>
+    <main className={`min-h-screen ${getMainStyle()} ${isMobile ? 'pt-8' : 'pt-6'}`}>
       <MenuBar desktopStyle={desktopStyle} onChangeDesktopStyle={setDesktopStyle} />
       
       {/* Desktop Icons - Hide on Mobile */}
@@ -248,7 +271,7 @@ export default function Home() {
       {/* Windows */}
       <div className={`relative ${isMobile ? 'px-2 space-y-3 pb-4' : 'container mx-auto px-4 pt-8'}`}>
         {isMobile ? (
-          // Mobile: Stack windows vertically
+          // Mobile: Stack windows vertically (simplified, only Mac/Win)
           windows.map((window) => {
             if (!window.isOpen || window.isDeleted) return null;
             return (
@@ -256,9 +279,9 @@ export default function Home() {
                 key={window.id}
                 title={window.title}
                 onClose={() => closeWindow(window.id)}
-                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
+                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}
                 isMobile={isMobile}
-                windowsStyle={desktopStyle === 'windows'}
+                desktopStyle={desktopStyle === 'windows' ? 'windows' : 'mac'} // Mobile defaults to Mac if not Windows
               >
                 {renderWindowContent(window.id)}
               </MacWindow>
@@ -282,8 +305,8 @@ export default function Home() {
                     position={window.position}
                     isDeleted={window.isDeleted}
                     size={window.size}
-                    className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
-                    windowsStyle={desktopStyle === 'windows'}
+                    className={getWindowStyle(desktopStyle)} // Apply theme class
+                    desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow
                   >
                     {renderWindowContent(window.id)}
                   </ManagedWindow>
@@ -301,13 +324,13 @@ export default function Home() {
                   isOpen={true}
                   onClose={() => setNoteWindows(prev => prev.filter(w => w.id !== id))}
                   onFocus={() => focusWindow(id)}
-                  zIndex={windows.length + noteWindows.length}
+                  zIndex={windows.length + noteWindows.length} // Ensure note windows are on top
                   position={position}
                   size={{ width: 400, height: 300 }}
-                  className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : ''}
-                  windowsStyle={desktopStyle === 'windows'}
+                  className={getWindowStyle(desktopStyle)} // Apply theme class
+                  desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow
                 >
-                  <NoteWindow windowsStyle={desktopStyle === 'windows'} />
+                  <NoteWindow desktopStyle={desktopStyle} />
                 </ManagedWindow>
               ))}
             </AnimatePresence>
