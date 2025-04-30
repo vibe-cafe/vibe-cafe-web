@@ -6,7 +6,7 @@ import Image from 'next/image';
 import FileIcon from '@/components/FileIcon';
 import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/components/WindowManager';
 import { AnimatePresence } from 'framer-motion';
-import MacWindow from '@/components/MacWindow';
+import MacWindow from '@/components/ThemedWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
 import NoteWindow from '@/components/NoteWindow';

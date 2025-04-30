@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
-import MacWindow from './MacWindow';
+import ThemedWindow from './ThemedWindow';
 
 interface WindowPositionChangeEvent {
   id: string;
@@ -80,10 +80,22 @@ interface WindowManagerProps {
   isDeleted?: boolean;
   size?: { width: number; height: number };
   className?: string;
-  windowsStyle?: boolean;
+  desktopStyle?: 'mac' | 'windows' | 'linux';
 }
 
-export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, zIndex, position, size: initialSize, className = '', windowsStyle = false }: WindowManagerProps) {
+export function ManagedWindow({ 
+  children, 
+  title, 
+  id, 
+  isOpen, 
+  onClose, 
+  onFocus, 
+  zIndex, 
+  position, 
+  size: initialSize, 
+  className = '', 
+  desktopStyle = 'mac' // Default to mac
+}: WindowManagerProps) {
   const [size, setSize] = useState(() => initialSize || { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
   const [isResizing, setIsResizing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -164,15 +176,15 @@ export function ManagedWindow({ children, title, id, isOpen, onClose, onFocus, z
       onDragEnd={handleDragEnd}
       className="touch-none"
     >
-      <MacWindow 
+      <ThemedWindow 
         title={title} 
         onClose={onClose}
         onStartResize={handleStartResize}
         className={className}
-        windowsStyle={windowsStyle}
+        desktopStyle={desktopStyle}
       >
         {children}
-      </MacWindow>
+      </ThemedWindow>
     </motion.div>
   );
 }
