@@ -51,7 +51,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { deskto
                   setVibeCafeDropdownOpen(false);
                 }}
               >
-                New Window
+                New
               </button>
               <button
                 className="flex items-center w-full px-3 py-1 text-left hover:bg-gray-200"
@@ -75,11 +75,6 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { deskto
             </div>
           )}
         </div>
-
-        {/* Edit Menu */}
-        <button className="hover:bg-black hover:text-white px-2 py-0.5 text-black">
-          Edit
-        </button>
 
         {/* View Menu with Dropdown */}
         <div className="relative">
