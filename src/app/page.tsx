@@ -248,6 +248,7 @@ export default function Home() {
                     icon={icon.icon}
                     onClick={() => toggleWindow(icon.id)}
                     isOpen={window?.isOpen || false}
+                    desktopStyle={desktopStyle}
                   />
                 );
               })}
@@ -263,6 +264,7 @@ export default function Home() {
               icon="🗑️"
               onClick={emptyTrash}
               isOpen={false}
+              desktopStyle={desktopStyle}
             />
           </div>
         </>
