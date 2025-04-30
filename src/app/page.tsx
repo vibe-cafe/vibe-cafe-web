@@ -24,28 +24,22 @@ const WINDOWS_CONFIG = [
     zIndex: 2,
   },
   { 
-    id: 'vibeFriends',
-    title: 'VibeFriends.app',
-    isOpen: true,
-    zIndex: 3,
-  },
-  { 
     id: 'vibeCafe',
     title: 'VibeCafe.app',
     isOpen: true,
-    zIndex: 4,
+    zIndex: 3,
   },
   { 
     id: 'contact',
     title: 'Contact.app',
     isOpen: true,
-    zIndex: 5,
+    zIndex: 4,
   },
   {
     id: 'code',
     title: 'code.mov',
     isOpen: false,
-    zIndex: 6,
+    zIndex: 5,
     size: { width: 400, height: 400 }
   },
 ];
@@ -107,12 +101,6 @@ export default function Home() {
       type: 'txt' as const,
     },
     {
-      id: 'vibeFriends',
-      name: 'VibeFriends.app',
-      type: 'app' as const,
-      icon: '🧑‍🤝‍🧑',
-    },
-    {
       id: 'vibeCafe',
       name: 'VibeCafe.app',
       type: 'app' as const,
@@ -161,13 +149,6 @@ export default function Home() {
             <p className="text-gray-800">{t('manifesto.text3')}</p>
           </div>
         );
-      case 'vibeFriends':
-        return (
-          <div className="space-y-2 md:space-y-3 text-black">
-            <h3 className="font-bold text-base md:text-lg text-black">{t('vibeFriends.title')}</h3>
-            <p className="text-sm text-gray-800">{t('vibeFriends.description')}</p>
-          </div>
-        );
       case 'vibeCafe':
         return (
           <div className="space-y-2 md:space-y-3 text-black">
@@ -177,13 +158,20 @@ export default function Home() {
         );
       case 'contact':
         return (
-          <div className="space-y-2 text-black">
+          <div className="space-y-4 text-black">
             <h3 className="font-bold text-base text-black">{t('contact.title')}</h3>
-            <button 
-              className="inline-block bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-800 transition-colors w-full text-center"
-            >
-              {t('contact.button')}
-            </button>
+            <div className="flex flex-col items-center gap-4">
+              <div className="p-2 bg-white rounded-lg shadow-sm">
+                <Image 
+                  src="/images/vibe-friends-qr.jpg" 
+                  alt="Vibe Friends QR Code" 
+                  width={120} 
+                  height={120}
+                  className="rounded"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         );
       case 'code':
