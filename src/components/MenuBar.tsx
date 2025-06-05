@@ -1,20 +1,36 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { 
   desktopStyle: 'mac' | 'windows' | 'linux'; 
   onChangeDesktopStyle: (style: 'mac' | 'windows' | 'linux') => void 
 }) {
   const { i18n } = useTranslation();
-  const [viewDropdownOpen, setViewDropdownOpen] = useState(false);
-  const [vibeCafeDropdownOpen, setVibeCafeDropdownOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'zh' ? 'en' : 'zh';
     i18n.changeLanguage(newLang);
   };
+
+  const handleMenuClick = (menuName: string) => {
+    setActiveMenu(activeMenu === menuName ? null : menuName);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.menu-item')) {
+        setActiveMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const getMenuItemStyle = (isActive = false) => {
     let baseStyle = 'flex items-center w-full px-3 py-1 text-left';
@@ -61,20 +77,23 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
         </div>
 
         {/* VibeCafé Menu with Dropdown */}
-        <div className="relative">
+        <div className="relative menu-item">
           <button
             className={`px-2 py-0.5 ${menuTextStyle} ${menuHoverStyle}`}
-            onClick={() => setVibeCafeDropdownOpen(v => !v)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClick('vibeCafe');
+            }}
           >
             VibeCafé
           </button>
-          {vibeCafeDropdownOpen && (
+          {activeMenu === 'vibeCafe' && (
             <div className={`absolute left-0 mt-1 w-40 rounded shadow z-50 ${dropdownStyle}`}>
               <button
                 className={getMenuItemStyle()}
                 onClick={() => {
                   window.dispatchEvent(new CustomEvent('openNewWindow'));
-                  setVibeCafeDropdownOpen(false);
+                  setActiveMenu(null);
                 }}
               >
                 New
@@ -83,7 +102,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
                 className={getMenuItemStyle()}
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href);
-                  setVibeCafeDropdownOpen(false);
+                  setActiveMenu(null);
                 }}
               >
                 Copy link
@@ -93,7 +112,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
                 onClick={() => {
                   const url = encodeURIComponent(window.location.href);
                   window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
-                  setVibeCafeDropdownOpen(false);
+                  setActiveMenu(null);
                 }}
               >
                 Share to X
@@ -103,32 +122,35 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
         </div>
 
         {/* View Menu with Dropdown */}
-        <div className="relative">
+        <div className="relative menu-item">
           <button
             className={`px-2 py-0.5 ${menuTextStyle} ${menuHoverStyle}`}
-            onClick={() => setViewDropdownOpen(v => !v)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClick('view');
+            }}
           >
             View
           </button>
-          {viewDropdownOpen && (
+          {activeMenu === 'view' && (
             <div className={`absolute left-0 mt-1 w-32 rounded shadow z-50 ${dropdownStyle}`}>
               <button
                 className={getMenuItemStyle(desktopStyle === 'mac')}
-                onClick={() => { onChangeDesktopStyle('mac'); setViewDropdownOpen(false); }}
+                onClick={() => { onChangeDesktopStyle('mac'); setActiveMenu(null); }}
               >
                 {desktopStyle === 'mac' && <span className="mr-2">✔</span>}
                 Mac
               </button>
               <button
                 className={getMenuItemStyle(desktopStyle === 'windows')}
-                onClick={() => { onChangeDesktopStyle('windows'); setViewDropdownOpen(false); }}
+                onClick={() => { onChangeDesktopStyle('windows'); setActiveMenu(null); }}
               >
                 {desktopStyle === 'windows' && <span className="mr-2">✔</span>}
                 Windows
               </button>
               <button
                 className={getMenuItemStyle(desktopStyle === 'linux')}
-                onClick={() => { onChangeDesktopStyle('linux'); setViewDropdownOpen(false); }}
+                onClick={() => { onChangeDesktopStyle('linux'); setActiveMenu(null); }}
               >
                 {desktopStyle === 'linux' && <span className="mr-2">✔</span>}
                 Linux

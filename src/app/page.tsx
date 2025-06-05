@@ -27,7 +27,7 @@ const WINDOWS_CONFIG = [
   { 
     id: 'vibeCafe',
     title: 'VibeCafe.app',
-    isOpen: true,
+    isOpen: false,
     zIndex: 3,
   },
   { 
