@@ -43,6 +43,13 @@ const WINDOWS_CONFIG = [
     zIndex: 5,
     size: { width: 400, height: 400 }
   },
+  {
+    id: 'design',
+    title: 'design.figma',
+    isOpen: false,
+    zIndex: 6,
+    size: { width: 600, height: 400 }
+  }
 ];
 
 // Default viewport size for SSR
@@ -163,6 +170,12 @@ export default function Home() {
       type: 'app' as const,
       icon: '🎬',
     },
+    {
+      id: 'design',
+      name: 'design.figma',
+      type: 'app' as const,
+      icon: '🧑‍🎨',
+    },
   ];
 
   const getMainStyle = () => {
@@ -251,6 +264,16 @@ export default function Home() {
               autoPlay
               loop
               playsInline
+            />
+          </div>
+        );
+      case 'design':
+        return (
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <iframe
+              className="w-full h-[500px] rounded border"
+              src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/design/wvQLFXP3FkVe4LtOOoNnD6/VibeCaf%C3%A9?node-id=0-1"
+              allowFullScreen
             />
           </div>
         );

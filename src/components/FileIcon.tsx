@@ -77,7 +77,11 @@ export default function FileIcon({
             <path d="M8 7H16M8 12H16M8 17H13" stroke="black" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         ) : icon ? (
-          <span className="text-2xl">{icon}</span>
+          icon.startsWith('/') ? (
+            <img src={icon} alt={name + ' icon'} className="w-8 h-8 object-contain" />
+          ) : (
+            <span className="text-2xl">{icon}</span>
+          )
         ) : (
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="4" width="16" height="16" rx="2" stroke="black" strokeWidth="2"/>
