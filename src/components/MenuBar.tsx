@@ -51,6 +51,12 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
   const menuHoverStyle = desktopStyle === 'linux' ? 'hover:bg-[#5A5A5A] rounded' : 'hover:bg-black hover:text-white';
   const dropdownStyle = desktopStyle === 'linux' ? 'bg-[#3A3A3A] border border-[#2A2A2A]' : 'bg-white border border-black';
 
+  const currentStyle = String(desktopStyle);
+
+  function renderCheckmark(current: string, target: string) {
+    return current === target ? <span className="mr-2">✔</span> : null;
+  }
+
   if (desktopStyle === 'windows') {
     return (
       <div className="fixed bottom-0 left-0 right-0 h-10 flex items-center px-2 z-50 bg-[#C0C0C0] border-t border-black shadow-lg">
@@ -126,24 +132,24 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
             {activeMenu === 'view' && (
               <div className={`absolute left-0 bottom-8 w-32 rounded shadow z-50 bg-white border border-black`}>
                 <button
-                  className={getMenuItemStyle(desktopStyle === 'mac')}
+                  className={getMenuItemStyle()}
                   onClick={() => { onChangeDesktopStyle('mac'); setActiveMenu(null); }}
                 >
-                  {desktopStyle === 'mac' && <span className="mr-2">✔</span>}
+                  {renderCheckmark(currentStyle, 'mac')}
                   Mac
                 </button>
                 <button
-                  className={getMenuItemStyle(desktopStyle === 'windows')}
+                  className={getMenuItemStyle()}
                   onClick={() => { onChangeDesktopStyle('windows'); setActiveMenu(null); }}
                 >
-                  {desktopStyle === 'windows' && <span className="mr-2">✔</span>}
+                  {renderCheckmark(currentStyle, 'windows')}
                   Windows
                 </button>
                 <button
-                  className={getMenuItemStyle(desktopStyle === 'linux')}
+                  className={getMenuItemStyle()}
                   onClick={() => { onChangeDesktopStyle('linux'); setActiveMenu(null); }}
                 >
-                  {desktopStyle === 'linux' && <span className="mr-2">✔</span>}
+                  {renderCheckmark(currentStyle, 'linux')}
                   Linux
                 </button>
               </div>
@@ -177,15 +183,6 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
         <div className="flex items-center">
           {desktopStyle === 'mac' ? (
             <span className="text-lg leading-none">🍎</span>
-          ) : desktopStyle === 'windows' ? (
-            <span className="w-5 h-5 flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="6" width="12" height="8" fill="#00ADEF" stroke="#000" strokeWidth="1"/>
-                <rect x="2" y="16" width="12" height="8" fill="#FFD900" stroke="#000" strokeWidth="1"/>
-                <rect x="16" y="6" width="14" height="8" fill="#F1511B" stroke="#000" strokeWidth="1"/>
-                <rect x="16" y="16" width="14" height="8" fill="#7CBB00" stroke="#000" strokeWidth="1"/>
-              </svg>
-            </span>
           ) : (
             <span className="text-lg leading-none">🐧</span>
           )}
@@ -250,24 +247,24 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
           {activeMenu === 'view' && (
             <div className={`absolute left-0 mt-1 w-32 rounded shadow z-50 ${dropdownStyle}`}>
               <button
-                className={getMenuItemStyle(desktopStyle === 'mac')}
+                className={getMenuItemStyle()}
                 onClick={() => { onChangeDesktopStyle('mac'); setActiveMenu(null); }}
               >
-                {desktopStyle === 'mac' && <span className="mr-2">✔</span>}
+                {renderCheckmark(currentStyle, 'mac')}
                 Mac
               </button>
               <button
-                className={getMenuItemStyle(desktopStyle === 'windows')}
+                className={getMenuItemStyle()}
                 onClick={() => { onChangeDesktopStyle('windows'); setActiveMenu(null); }}
               >
-                {desktopStyle === 'windows' && <span className="mr-2">✔</span>}
+                {renderCheckmark(currentStyle, 'windows')}
                 Windows
               </button>
               <button
-                className={getMenuItemStyle(desktopStyle === 'linux')}
+                className={getMenuItemStyle()}
                 onClick={() => { onChangeDesktopStyle('linux'); setActiveMenu(null); }}
               >
-                {desktopStyle === 'linux' && <span className="mr-2">✔</span>}
+                {renderCheckmark(currentStyle, 'linux')}
                 Linux
               </button>
             </div>
