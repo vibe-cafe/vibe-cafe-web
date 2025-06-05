@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import ThemedWindow from './ThemedWindow';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 interface WindowPositionChangeEvent {
   id: string;
@@ -13,7 +14,7 @@ declare global {
   }
 }
 
-interface Window {
+export interface Window {
   id: string;
   title: string;
   isOpen: boolean;
@@ -28,7 +29,6 @@ interface Window {
 const WINDOW_WIDTH = 400;
 const WINDOW_HEIGHT = 240;
 const MARGIN = 20;
-const DEFAULT_VIEWPORT = { width: 1200, height: 800 };
 
 // Animation delays
 const CLOSE_WINDOW_DELAY = 200;
@@ -38,9 +38,19 @@ const DELETE_ICON_DELAY = 100;
 export const calculateInitialPosition = (
   index: number, 
   totalWindows: number,
-  viewport = DEFAULT_VIEWPORT
+  viewport = typeof window !== 'undefined' 
+    ? { width: window.innerWidth, height: window.innerHeight }
+    : { width: 1024, height: 768 } // Default fallback for SSR
 ) => {
   const { width: viewportWidth, height: viewportHeight } = viewport;
+  
+  // For new windows, center them
+  if (index >= totalWindows - 1) {
+    return {
+      x: Math.max(0, (viewportWidth - WINDOW_WIDTH) / 2),
+      y: Math.max(0, (viewportHeight - WINDOW_HEIGHT) / 2)
+    };
+  }
   
   // Calculate maximum windows that can fit in a row
   const availableWidth = viewportWidth - MARGIN * 2;
@@ -56,16 +66,19 @@ export const calculateInitialPosition = (
   const rowWidth = totalWindowsInThisRow * WINDOW_WIDTH + (totalWindowsInThisRow - 1) * MARGIN;
   
   // Center the row horizontally
-  const startX = (viewportWidth - rowWidth) / 2;
+  const startX = Math.max(0, (viewportWidth - rowWidth) / 2);
   
   // Calculate final position
-  const x = startX + col * (WINDOW_WIDTH + MARGIN);
-  const y = MARGIN + row * (WINDOW_HEIGHT + MARGIN);
+  const x = Math.min(
+    startX + col * (WINDOW_WIDTH + MARGIN),
+    viewportWidth - WINDOW_WIDTH - MARGIN
+  );
+  const y = Math.min(
+    MARGIN + row * (WINDOW_HEIGHT + MARGIN),
+    viewportHeight - WINDOW_HEIGHT - MARGIN
+  );
   
-  return {
-    x: Math.min(x, viewportWidth - WINDOW_WIDTH - MARGIN),
-    y: Math.min(y, viewportHeight - WINDOW_HEIGHT - MARGIN)
-  };
+  return { x, y };
 };
 
 interface WindowManagerProps {
@@ -191,6 +204,11 @@ export function ManagedWindow({
 
 export const useWindowManager = (initialWindows: Window[]) => {
   const [windows, setWindows] = useState<Window[]>(initialWindows);
+  const { width: viewportWidth, height: viewportHeight } = useWindowSize();
+
+  const getMaxZIndex = useCallback(() => {
+    return Math.max(...windows.map(w => w.zIndex), 0);
+  }, [windows]);
 
   const closeWindow = useCallback((id: string) => {
     setWindows((prev) => {
@@ -217,21 +235,35 @@ export const useWindowManager = (initialWindows: Window[]) => {
       const windowToToggle = prev.find((w) => w.id === id);
       if (!windowToToggle) return prev;
 
+      const isOpening = !windowToToggle.isOpen;
+      const openWindows = prev.filter(w => w.isOpen).length;
+
       return prev.map((w) => {
         if (w.id === id) {
+          const newPosition = isOpening 
+            ? calculateInitialPosition(openWindows, openWindows + 1, { width: viewportWidth, height: viewportHeight })
+            : w.lastPosition || w.position;
+
           return {
             ...w,
             isOpen: !w.isOpen,
-            // Restore last position when reopening
-            ...((!w.isOpen && w.lastPosition) ? {
-              position: w.lastPosition
-            } : {})
+            position: newPosition,
+            zIndex: isOpening ? getMaxZIndex() + 1 : w.zIndex,
           };
         }
         return w;
       });
     });
-  }, []);
+  }, [viewportWidth, viewportHeight, getMaxZIndex]);
+
+  const focusWindow = useCallback((id: string) => {
+    setWindows(prev => prev.map(w => {
+      if (w.id === id) {
+        return { ...w, zIndex: getMaxZIndex() + 1 };
+      }
+      return w;
+    }));
+  }, [getMaxZIndex]);
 
   const updateWindowPosition = useCallback((id: string, newX: number, newY: number) => {
     setWindows((prev) => 
@@ -257,19 +289,6 @@ export const useWindowManager = (initialWindows: Window[]) => {
     };
   }, [updateWindowPosition]);
 
-  const getMaxZIndex = () => {
-    return Math.max(...windows.map(w => w.zIndex), 0);
-  };
-
-  const focusWindow = (id: string) => {
-    setWindows(prev => prev.map(w => {
-      if (w.id === id) {
-        return { ...w, zIndex: getMaxZIndex() + 1 };
-      }
-      return w;
-    }));
-  };
-
   const emptyTrash = async () => {
     // First close all windows sequentially
     for (let i = 0; i < windows.length; i++) {
@@ -290,6 +309,7 @@ export const useWindowManager = (initialWindows: Window[]) => {
 
   return {
     windows,
+    setWindows,
     toggleWindow,
     closeWindow,
     focusWindow,

@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import MenuBar from '@/components/MenuBar';
 import Image from 'next/image';
 import FileIcon from '@/components/FileIcon';
-import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/components/WindowManager';
+import { ManagedWindow, useWindowManager, calculateInitialPosition, Window } from '@/components/WindowManager';
 import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/ThemedWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NoteWindow from '@/components/NoteWindow';
 
 const WINDOWS_CONFIG = [
@@ -45,38 +45,70 @@ const WINDOWS_CONFIG = [
   },
 ];
 
+// Default viewport size for SSR
+const DEFAULT_VIEWPORT = { width: 1024, height: 768 };
+
 const INITIAL_WINDOWS = WINDOWS_CONFIG.map((window, index) => ({
   ...window,
-  position: calculateInitialPosition(index, WINDOWS_CONFIG.length)
+  position: calculateInitialPosition(index, WINDOWS_CONFIG.length, DEFAULT_VIEWPORT)
 }));
 
 export default function Home() {
   const [hydrated, setHydrated] = useState(false);
   const { t, i18n } = useTranslation();
-  const { windows, toggleWindow, closeWindow, focusWindow, emptyTrash } = useWindowManager(INITIAL_WINDOWS);
-  const { isMobile } = useWindowSize();
+  const { windows, setWindows, toggleWindow, closeWindow, focusWindow, emptyTrash, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
+  const { isMobile, width: viewportWidth, height: viewportHeight } = useWindowSize();
   const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux'>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux') || 'mac';
     }
     return 'mac';
   });
-  const [noteWindows, setNoteWindows] = useState<{ id: string; position: { x: number; y: number } }[]>([]);
+
+  // Update window positions when viewport changes
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const openWindows = windows.filter(w => w.isOpen);
+    openWindows.forEach((window, index) => {
+      const newPosition = calculateInitialPosition(
+        index,
+        openWindows.length,
+        { width: viewportWidth, height: viewportHeight }
+      );
+      updateWindowPosition(window.id, newPosition.x, newPosition.y);
+    });
+  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition]);
 
   useEffect(() => {
     setHydrated(true);
   }, []);
 
-  useEffect(() => {
-    const handleNewWindow = () => {
-      const id = `note-${Date.now()}`;
-      const position = calculateInitialPosition(noteWindows.length, noteWindows.length + 1);
-      setNoteWindows(prev => [...prev, { id, position }]);
+  const handleNewWindow = useCallback(() => {
+    const id = `note-${Date.now()}`;
+    const position = calculateInitialPosition(
+      windows.filter(w => w.isOpen).length,
+      windows.filter(w => w.isOpen).length + 1,
+      { width: viewportWidth, height: viewportHeight }
+    );
+    
+    // Add the new note window to the windows array
+    const newWindow = {
+      id,
+      title: 'Untitled.txt',
+      isOpen: true,
+      zIndex: windows.length + 1,
+      position,
+      size: { width: 400, height: 300 }
     };
+    
+    setWindows((prev: Window[]) => [...prev, newWindow]);
+  }, [windows, viewportWidth, viewportHeight, setWindows]);
 
+  useEffect(() => {
     window.addEventListener('openNewWindow', handleNewWindow);
     return () => window.removeEventListener('openNewWindow', handleNewWindow);
-  }, [noteWindows.length]);
+  }, [handleNewWindow]);
 
   // Language persistence
   useEffect(() => {
@@ -285,7 +317,11 @@ export default function Home() {
                 isMobile={isMobile}
                 desktopStyle={desktopStyle === 'windows' ? 'windows' : 'mac'} // Mobile defaults to Mac if not Windows
               >
-                {renderWindowContent(window.id)}
+                {window.id.startsWith('note-') ? (
+                  <NoteWindow desktopStyle={desktopStyle} />
+                ) : (
+                  renderWindowContent(window.id)
+                )}
               </MacWindow>
             );
           })
@@ -310,31 +346,14 @@ export default function Home() {
                     className={getWindowStyle(desktopStyle)} // Apply theme class
                     desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow
                   >
-                    {renderWindowContent(window.id)}
+                    {window.id.startsWith('note-') ? (
+                      <NoteWindow desktopStyle={desktopStyle} />
+                    ) : (
+                      renderWindowContent(window.id)
+                    )}
                   </ManagedWindow>
                 );
               })}
-            </AnimatePresence>
-
-            {/* Note Windows */}
-            <AnimatePresence mode="popLayout">
-              {noteWindows.map(({ id, position }) => (
-                <ManagedWindow
-                  key={id}
-                  id={id}
-                  title="Untitled.txt"
-                  isOpen={true}
-                  onClose={() => setNoteWindows(prev => prev.filter(w => w.id !== id))}
-                  onFocus={() => focusWindow(id)}
-                  zIndex={windows.length + noteWindows.length} // Ensure note windows are on top
-                  position={position}
-                  size={{ width: 400, height: 300 }}
-                  className={getWindowStyle(desktopStyle)} // Apply theme class
-                  desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow
-                >
-                  <NoteWindow desktopStyle={desktopStyle} />
-                </ManagedWindow>
-              ))}
             </AnimatePresence>
           </>
         )}
