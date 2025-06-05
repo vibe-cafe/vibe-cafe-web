@@ -28,7 +28,8 @@ export interface Window {
 // Default window dimensions and spacing
 const WINDOW_WIDTH = 400;
 const WINDOW_HEIGHT = 240;
-const MARGIN = 20;
+const MARGIN = 80;
+const OFFSET = 80;
 
 // Animation delays
 const CLOSE_WINDOW_DELAY = 200;
@@ -36,48 +37,25 @@ const DELETE_ICON_DELAY = 100;
 
 // Calculate initial window positions in a grid layout
 export const calculateInitialPosition = (
-  index: number, 
+  index: number,
   totalWindows: number,
-  viewport = typeof window !== 'undefined' 
+  viewport = typeof window !== 'undefined'
     ? { width: window.innerWidth, height: window.innerHeight }
     : { width: 1024, height: 768 } // Default fallback for SSR
 ) => {
   const { width: viewportWidth, height: viewportHeight } = viewport;
-  
-  // For new windows, center them
-  if (index >= totalWindows - 1) {
-    return {
-      x: Math.max(0, (viewportWidth - WINDOW_WIDTH) / 2),
-      y: Math.max(0, (viewportHeight - WINDOW_HEIGHT) / 2)
-    };
-  }
-  
-  // Calculate maximum windows that can fit in a row
-  const availableWidth = viewportWidth - MARGIN * 2;
-  const maxWindowsPerRow = Math.floor(availableWidth / (WINDOW_WIDTH + MARGIN));
-  const windowsPerRow = Math.max(1, maxWindowsPerRow);
-  
-  // Calculate row and column
-  const row = Math.floor(index / windowsPerRow);
-  const col = index % windowsPerRow;
-  
-  // Calculate the total width of windows in this row
-  const totalWindowsInThisRow = Math.min(windowsPerRow, totalWindows - (row * windowsPerRow));
-  const rowWidth = totalWindowsInThisRow * WINDOW_WIDTH + (totalWindowsInThisRow - 1) * MARGIN;
-  
-  // Center the row horizontally
-  const startX = Math.max(0, (viewportWidth - rowWidth) / 2);
-  
-  // Calculate final position
-  const x = Math.min(
-    startX + col * (WINDOW_WIDTH + MARGIN),
-    viewportWidth - WINDOW_WIDTH - MARGIN
-  );
-  const y = Math.min(
-    MARGIN + row * (WINDOW_HEIGHT + MARGIN),
-    viewportHeight - WINDOW_HEIGHT - MARGIN
-  );
-  
+
+  // Cascade layout: each window offset from the previous
+  let x = MARGIN + index * OFFSET;
+  let y = MARGIN + index * OFFSET;
+
+  // If window would go off the right or bottom, wrap to margin
+  if (x + WINDOW_WIDTH > viewportWidth) x = MARGIN;
+  if (y + WINDOW_HEIGHT > viewportHeight) y = MARGIN;
+
+  // For new windows, always use the next cascade position
+  // (no special centering logic needed)
+
   return { x, y };
 };
 
