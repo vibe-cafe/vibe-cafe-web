@@ -289,12 +289,12 @@ export default function Home() {
       {/* Desktop Icons - Hide on Mobile */}
       {!isMobile && (
         <>
-          <div className="fixed left-4 top-20 flex flex-col gap-4">
-            <AnimatePresence mode="popLayout">
+          {/* Apple Dock */}
+          {desktopStyle === 'mac' && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-row gap-4 bg-white/80 border border-black rounded-2xl px-6 py-2 shadow-lg backdrop-blur z-40">
               {fileIcons.map(icon => {
                 const window = windows.find(w => w.id === icon.id);
                 if (window?.isDeleted) return null;
-                
                 return (
                   <FileIcon
                     key={icon.id}
@@ -307,11 +307,34 @@ export default function Home() {
                   />
                 );
               })}
-            </AnimatePresence>
-          </div>
+            </div>
+          )}
+
+          {/* Windows & Linux Vertical Stack */}
+          {(desktopStyle === 'windows' || desktopStyle === 'linux') && (
+            <div className="fixed left-4 top-20 flex flex-col gap-4 z-40">
+              <AnimatePresence mode="popLayout">
+                {fileIcons.map(icon => {
+                  const window = windows.find(w => w.id === icon.id);
+                  if (window?.isDeleted) return null;
+                  return (
+                    <FileIcon
+                      key={icon.id}
+                      name={icon.name}
+                      type={icon.type}
+                      icon={icon.icon}
+                      onClick={() => toggleWindow(icon.id)}
+                      isOpen={window?.isOpen || false}
+                      desktopStyle={desktopStyle}
+                    />
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Trash Icon */}
-          <div className="fixed bottom-4 right-4">
+          <div className="fixed bottom-4 right-4 z-40">
             <FileIcon
               key="trash"
               name="Trash"

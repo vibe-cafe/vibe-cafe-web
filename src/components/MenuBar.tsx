@@ -51,6 +51,121 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
   const menuHoverStyle = desktopStyle === 'linux' ? 'hover:bg-[#5A5A5A] rounded' : 'hover:bg-black hover:text-white';
   const dropdownStyle = desktopStyle === 'linux' ? 'bg-[#3A3A3A] border border-[#2A2A2A]' : 'bg-white border border-black';
 
+  if (desktopStyle === 'windows') {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 h-10 flex items-center px-2 z-50 bg-[#C0C0C0] border-t border-black shadow-lg">
+        {/* Start Button */}
+        <button className="flex items-center gap-2 px-3 py-1 bg-[#008080] text-white font-bold rounded mr-2 hover:bg-[#00a2e8]">
+          <span className="w-5 h-5 flex items-center justify-center">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="6" width="12" height="8" fill="#00ADEF" stroke="#000" strokeWidth="1"/>
+              <rect x="2" y="16" width="12" height="8" fill="#FFD900" stroke="#000" strokeWidth="1"/>
+              <rect x="16" y="6" width="14" height="8" fill="#F1511B" stroke="#000" strokeWidth="1"/>
+              <rect x="16" y="16" width="14" height="8" fill="#7CBB00" stroke="#000" strokeWidth="1"/>
+            </svg>
+          </span>
+          Start
+        </button>
+        {/* Menus */}
+        <div className="flex items-center gap-4 text-xs font-[MS_Sans_Serif]">
+          {/* VibeCafé Menu with Dropdown */}
+          <div className="relative menu-item">
+            <button
+              className={`px-2 py-0.5 text-black hover:bg-gray-200`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMenuClick('vibeCafe');
+              }}
+            >
+              VibeCafé
+            </button>
+            {activeMenu === 'vibeCafe' && (
+              <div className={`absolute left-0 bottom-8 w-40 rounded shadow z-50 bg-white border border-black`}>
+                <button
+                  className={getMenuItemStyle()}
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('openNewWindow'));
+                    setActiveMenu(null);
+                  }}
+                >
+                  New
+                </button>
+                <button
+                  className={getMenuItemStyle()}
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    setActiveMenu(null);
+                  }}
+                >
+                  Copy link
+                </button>
+                <button
+                  className={getMenuItemStyle()}
+                  onClick={() => {
+                    const url = encodeURIComponent(window.location.href);
+                    window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+                    setActiveMenu(null);
+                  }}
+                >
+                  Share to X
+                </button>
+              </div>
+            )}
+          </div>
+          {/* View Menu with Dropdown */}
+          <div className="relative menu-item">
+            <button
+              className={`px-2 py-0.5 text-black hover:bg-gray-200`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMenuClick('view');
+              }}
+            >
+              View
+            </button>
+            {activeMenu === 'view' && (
+              <div className={`absolute left-0 bottom-8 w-32 rounded shadow z-50 bg-white border border-black`}>
+                <button
+                  className={getMenuItemStyle(desktopStyle === 'mac')}
+                  onClick={() => { onChangeDesktopStyle('mac'); setActiveMenu(null); }}
+                >
+                  {desktopStyle === 'mac' && <span className="mr-2">✔</span>}
+                  Mac
+                </button>
+                <button
+                  className={getMenuItemStyle(desktopStyle === 'windows')}
+                  onClick={() => { onChangeDesktopStyle('windows'); setActiveMenu(null); }}
+                >
+                  {desktopStyle === 'windows' && <span className="mr-2">✔</span>}
+                  Windows
+                </button>
+                <button
+                  className={getMenuItemStyle(desktopStyle === 'linux')}
+                  onClick={() => { onChangeDesktopStyle('linux'); setActiveMenu(null); }}
+                >
+                  {desktopStyle === 'linux' && <span className="mr-2">✔</span>}
+                  Linux
+                </button>
+              </div>
+            )}
+          </div>
+          {/* Language Switcher */}
+          <button 
+            onClick={toggleLanguage}
+            className={`px-2 py-0.5 text-black hover:bg-gray-200`}
+          >
+            {i18n.language === 'zh' ? 'EN' : '中文'}
+          </button>
+        </div>
+        {/* Time */}
+        <div className="ml-auto text-xs text-black font-[MS_Sans_Serif]">
+          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      </div>
+    );
+  }
+
+  // Mac & Linux: keep top bar
   return (
     <div className={`fixed top-0 left-0 right-0 h-6 flex items-center px-2 z-50 ${
       desktopStyle === 'linux' 
