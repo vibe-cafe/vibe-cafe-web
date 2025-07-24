@@ -11,6 +11,12 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect, useCallback } from 'react';
 import NoteWindow from '@/components/NoteWindow';
 
+// Define constants matching WindowManager.tsx
+const WINDOW_WIDTH = 400;
+const WINDOW_HEIGHT = 240;
+const MARGIN = 80;
+const OFFSET = 80;
+
 const WINDOWS_CONFIG = [
   { 
     id: 'about',
@@ -93,11 +99,39 @@ export default function Home() {
 
   const handleNewWindow = useCallback(() => {
     const id = `note-${Date.now()}`;
-    const position = calculateInitialPosition(
-      windows.filter(w => w.isOpen).length,
-      windows.filter(w => w.isOpen).length + 1,
-      { width: viewportWidth, height: viewportHeight }
-    );
+    
+    // Find a position that doesn't overlap with existing windows
+    const existingOpenWindows = windows.filter(w => w.isOpen);
+    let position = { x: MARGIN, y: MARGIN };
+    
+    if (existingOpenWindows.length > 0) {
+      // Find the window with the highest Y position (lowest on screen)
+      const lowestWindow = existingOpenWindows.reduce((lowest, win) => {
+        return win.position.y > lowest.position.y ? win : lowest;
+      });
+      
+      // Position the new window below the lowest window
+      position.x = lowestWindow.position.x;
+      position.y = lowestWindow.position.y + (lowestWindow.size?.height || 240) + OFFSET;
+      
+      // Check if this would put the window below the viewport
+      if (position.y + 300 > viewportHeight - MARGIN) {
+        // Find the rightmost window
+        const rightmostWindow = existingOpenWindows.reduce((rightmost, win) => {
+          return win.position.x > rightmost.position.x ? win : rightmost;
+        });
+        
+        // Position the new window to the right of the rightmost window
+        position.x = rightmostWindow.position.x + (rightmostWindow.size?.width || 400) + OFFSET;
+        position.y = MARGIN;
+        
+        // If this would put the window outside the viewport, start at the beginning
+        if (position.x + 400 > viewportWidth - MARGIN) {
+          position.x = MARGIN;
+          position.y = MARGIN;
+        }
+      }
+    }
     
     // Add the new note window to the windows array
     const newWindow = {

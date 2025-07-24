@@ -35,7 +35,7 @@ const OFFSET = 80;
 const CLOSE_WINDOW_DELAY = 200;
 const DELETE_ICON_DELAY = 100;
 
-// Calculate initial window positions in a grid layout
+// Calculate initial window positions in a grid layout without overlap
 export const calculateInitialPosition = (
   index: number,
   totalWindows: number,
@@ -45,16 +45,25 @@ export const calculateInitialPosition = (
 ) => {
   const { width: viewportWidth, height: viewportHeight } = viewport;
 
-  // Cascade layout: each window offset from the previous
-  let x = MARGIN + index * OFFSET;
-  let y = MARGIN + index * OFFSET;
+  // Calculate grid dimensions
+  const cols = Math.floor((viewportWidth - MARGIN * 2) / (WINDOW_WIDTH + OFFSET));
+  const rows = Math.floor((viewportHeight - MARGIN * 2) / (WINDOW_HEIGHT + OFFSET));
+  
+  // Fallback to at least 1 column/row if viewport is too small
+  const gridCols = Math.max(1, cols);
+  const gridRows = Math.max(1, rows);
 
-  // If window would go off the right or bottom, wrap to margin
+  // Calculate grid position
+  const col = index % gridCols;
+  const row = Math.floor(index / gridCols);
+
+  // Calculate position with no overlap
+  let x = MARGIN + col * (WINDOW_WIDTH + OFFSET);
+  let y = MARGIN + row * (WINDOW_HEIGHT + OFFSET);
+
+  // Ensure windows don't go off-screen
   if (x + WINDOW_WIDTH > viewportWidth) x = MARGIN;
   if (y + WINDOW_HEIGHT > viewportHeight) y = MARGIN;
-
-  // For new windows, always use the next cascade position
-  // (no special centering logic needed)
 
   return { x, y };
 };
@@ -188,6 +197,50 @@ export const useWindowManager = (initialWindows: Window[]) => {
     return Math.max(...windows.map(w => w.zIndex), 0);
   }, [windows]);
 
+  // Find a position for a new window that doesn't overlap with existing windows
+  const findNonOverlappingPosition = (
+    existingWindows: Window[],
+    viewport: { width: number; height: number }
+  ) => {
+    // Start with default position
+    let x = MARGIN;
+    let y = MARGIN;
+    const windowWidth = WINDOW_WIDTH;
+    const windowHeight = WINDOW_HEIGHT;
+    
+    // If there are existing windows, position below the lowest one
+    if (existingWindows.length > 0) {
+      // Find the window with the highest Y position (lowest on screen)
+      const lowestWindow = existingWindows.reduce((lowest, win) => {
+        return win.position.y > lowest.position.y ? win : lowest;
+      });
+      
+      // Position the new window below the lowest window
+      x = lowestWindow.position.x;
+      y = lowestWindow.position.y + (lowestWindow.size?.height || WINDOW_HEIGHT) + OFFSET;
+      
+      // If this would put the window below the viewport, start a new column
+      if (y + windowHeight > viewport.height - MARGIN) {
+        // Find the rightmost window
+        const rightmostWindow = existingWindows.reduce((rightmost, win) => {
+          return win.position.x > rightmost.position.x ? win : rightmost;
+        });
+        
+        // Position the new window to the right of the rightmost window
+        x = rightmostWindow.position.x + (rightmostWindow.size?.width || WINDOW_WIDTH) + OFFSET;
+        y = MARGIN;
+        
+        // If this would put the window outside the viewport, start at the beginning
+        if (x + windowWidth > viewport.width - MARGIN) {
+          x = MARGIN;
+          y = MARGIN;
+        }
+      }
+    }
+    
+    return { x, y };
+  };
+
   const closeWindow = useCallback((id: string) => {
     setWindows((prev) => {
       const windowToClose = prev.find((w) => w.id === id);
@@ -218,9 +271,18 @@ export const useWindowManager = (initialWindows: Window[]) => {
 
       return prev.map((w) => {
         if (w.id === id) {
-          const newPosition = isOpening 
-            ? calculateInitialPosition(openWindows, openWindows + 1, { width: viewportWidth, height: viewportHeight })
-            : w.lastPosition || w.position;
+          let newPosition;
+          if (isOpening) {
+            // For new windows, find a position that doesn't overlap with existing windows
+            const existingOpenWindows = prev.filter(win => win.isOpen && win.id !== id);
+            newPosition = findNonOverlappingPosition(
+              existingOpenWindows, 
+              { width: viewportWidth, height: viewportHeight }
+            );
+          } else {
+            // For closing windows, keep last position
+            newPosition = w.lastPosition || w.position;
+          }
 
           return {
             ...w,
