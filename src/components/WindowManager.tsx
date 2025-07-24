@@ -47,11 +47,9 @@ export const calculateInitialPosition = (
 
   // Calculate grid dimensions
   const cols = Math.floor((viewportWidth - MARGIN * 2) / (WINDOW_WIDTH + OFFSET));
-  const rows = Math.floor((viewportHeight - MARGIN * 2) / (WINDOW_HEIGHT + OFFSET));
   
-  // Fallback to at least 1 column/row if viewport is too small
+  // Fallback to at least 1 column if viewport is too small
   const gridCols = Math.max(1, cols);
-  const gridRows = Math.max(1, rows);
 
   // Calculate grid position
   const col = index % gridCols;
@@ -267,7 +265,6 @@ export const useWindowManager = (initialWindows: Window[]) => {
       if (!windowToToggle) return prev;
 
       const isOpening = !windowToToggle.isOpen;
-      const openWindows = prev.filter(w => w.isOpen).length;
 
       return prev.map((w) => {
         if (w.id === id) {

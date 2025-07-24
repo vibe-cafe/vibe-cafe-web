@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
-  title: "Vibe Café - Keep the Vibe",
+  title: "VibeCafé - Keep the Vibe",
   description: "A community of Vibe Creators - where innovation meets inspiration",
 };
 

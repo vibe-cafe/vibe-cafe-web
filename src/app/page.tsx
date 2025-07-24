@@ -12,8 +12,6 @@ import { useState, useEffect, useCallback } from 'react';
 import NoteWindow from '@/components/NoteWindow';
 
 // Define constants matching WindowManager.tsx
-const WINDOW_WIDTH = 400;
-const WINDOW_HEIGHT = 240;
 const MARGIN = 80;
 const OFFSET = 80;
 
@@ -111,8 +109,10 @@ export default function Home() {
       });
       
       // Position the new window below the lowest window
-      position.x = lowestWindow.position.x;
-      position.y = lowestWindow.position.y + (lowestWindow.size?.height || 240) + OFFSET;
+      position = {
+        x: lowestWindow.position.x,
+        y: lowestWindow.position.y + (lowestWindow.size?.height || 240) + OFFSET
+      };
       
       // Check if this would put the window below the viewport
       if (position.y + 300 > viewportHeight - MARGIN) {
@@ -122,13 +122,14 @@ export default function Home() {
         });
         
         // Position the new window to the right of the rightmost window
-        position.x = rightmostWindow.position.x + (rightmostWindow.size?.width || 400) + OFFSET;
-        position.y = MARGIN;
+        position = {
+          x: rightmostWindow.position.x + (rightmostWindow.size?.width || 400) + OFFSET,
+          y: MARGIN
+        };
         
         // If this would put the window outside the viewport, start at the beginning
         if (position.x + 400 > viewportWidth - MARGIN) {
-          position.x = MARGIN;
-          position.y = MARGIN;
+          position = { x: MARGIN, y: MARGIN };
         }
       }
     }
@@ -159,7 +160,7 @@ export default function Home() {
         i18n.changeLanguage(savedLang);
       }
     }
-  }, []);
+  }, [i18n]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

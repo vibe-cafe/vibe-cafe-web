@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface FileIconProps {
   name: string;
@@ -78,7 +79,9 @@ export default function FileIcon({
           </svg>
         ) : icon ? (
           icon.startsWith('/') ? (
-            <img src={icon} alt={name + ' icon'} className="w-8 h-8 object-contain" />
+            <div className="w-8 h-8 relative">
+              <Image src={icon} alt={name + ' icon'} fill className="object-contain" />
+            </div>
           ) : (
             <span className="text-2xl">{icon}</span>
           )
