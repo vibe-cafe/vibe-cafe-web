@@ -215,12 +215,22 @@ export default function Home() {
   const getMainStyle = () => {
     switch (desktopStyle) {
       case 'windows':
-        return 'bg-[#008080] font-[\'MS_Sans_Serif\']';
+        return 'font-[\'MS_Sans_Serif\']';
       case 'linux':
-        // Using a common Linux desktop color and font
-        return 'bg-[#4E5A65] font-[\'Liberation_Sans\']'; 
+        return 'font-[\'Liberation_Sans\']';
       default: // mac
-        return 'bg-[#9C9C9C] font-chicago';
+        return 'font-chicago';
+    }
+  };
+  
+  const getBackgroundImage = () => {
+    switch (desktopStyle) {
+      case 'windows':
+        return 'url("/wallpapers/windows.webp")';
+      case 'linux':
+        return 'url("/wallpapers/linxus.jpg")';
+      default: // mac
+        return 'url("/wallpapers/mac.jpg")';
     }
   };
 
@@ -317,7 +327,12 @@ export default function Home() {
   };
 
   return (
-    <main className={`min-h-screen ${getMainStyle()} ${isMobile ? 'pt-8' : 'pt-6'}`}>
+    <main className={`min-h-screen ${getMainStyle()} ${isMobile ? 'pt-8' : 'pt-6'}`} style={{ 
+      backgroundImage: getBackgroundImage(),
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
       <MenuBar desktopStyle={desktopStyle} onChangeDesktopStyle={setDesktopStyle} />
       
       {/* Desktop Icons - Hide on Mobile */}
