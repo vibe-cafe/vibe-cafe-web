@@ -54,6 +54,28 @@ export default function ThemedWindow({
         </div>
       );
     }
+    if (desktopStyle === 'claude') {
+      return (
+        <div className={`bg-black border border-gray-400 rounded-none shadow-none w-full flex flex-col font-mono ${className}`}>
+          {/* Claude Title Bar */}
+          <div className="h-7 bg-black flex items-center px-2 select-none">
+            <div className="flex-1 text-left text-white text-sm font-bold">
+              {title}
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+              className="ml-2 px-2 py-1 bg-black text-white text-xs rounded-none hover:bg-white hover:text-black"
+            >
+              close
+            </button>
+          </div>
+          {/* Window Content */}
+          <div className="flex-1 p-4 overflow-auto relative">
+            {children}
+          </div>
+        </div>
+      );
+    }
     // Default to Mac style for mobile Linux/Mac
     return (
       <div className={`bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col ${className}`}>

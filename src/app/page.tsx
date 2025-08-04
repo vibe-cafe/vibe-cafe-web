@@ -558,8 +558,118 @@ export default function Home() {
         </>
       )}
 
+      {/* Mobile Claude Theme Menu Bar */}
+      {isMobile && desktopStyle === 'claude' && (
+        <div className="fixed top-4 left-4 right-4 bg-black border border-[#DE7356] px-4 py-2 z-40">
+          <div className="flex items-center justify-between text-[#DE7356] font-mono text-sm">
+            <div className="flex items-center gap-4">
+              <span>✻</span>
+              
+              {/* VibeCafé Menu with Dropdown */}
+              <div className="relative menu-item">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveMenu(activeMenu === 'vibeCafe' ? null : 'vibeCafe');
+                  }}
+                  className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                >
+                  VibeCafé
+                </button>
+                {activeMenu === 'vibeCafe' && (
+                  <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[140px]">
+                    <button
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('openNewWindow'));
+                        setActiveMenu(null);
+                      }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      New
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                        setActiveMenu(null);
+                      }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      Copy link
+                    </button>
+                    <button
+                      onClick={() => {
+                        const url = encodeURIComponent(window.location.href);
+                        window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+                        setActiveMenu(null);
+                      }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      Share to X
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* View Menu with Dropdown */}
+              <div className="relative menu-item">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveMenu(activeMenu === 'view' ? null : 'view');
+                  }}
+                  className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                >
+                  View
+                </button>
+                {activeMenu === 'view' && (
+                  <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[160px]">
+                    <button
+                      onClick={() => { setDesktopStyle('mac'); setActiveMenu(null); }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      {desktopStyle === 'mac' ? '✔ ' : ''}Mac
+                    </button>
+                    <button
+                      onClick={() => { setDesktopStyle('windows'); setActiveMenu(null); }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      {desktopStyle === 'windows' ? '✔ ' : ''}Windows
+                    </button>
+                    <button
+                      onClick={() => { setDesktopStyle('linux'); setActiveMenu(null); }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      {desktopStyle === 'linux' ? '✔ ' : ''}Linux
+                    </button>
+                    <button
+                      onClick={() => { setDesktopStyle('claude'); setActiveMenu(null); }}
+                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                    >
+                      {desktopStyle === 'claude' ? '✔ ' : ''}Claude Code
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              <button
+                onClick={() => {
+                  const newLang = i18n.language === 'zh' ? 'en' : 'zh';
+                  i18n.changeLanguage(newLang);
+                }}
+                className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+              >
+                {i18n.language === 'zh' ? 'EN' : '中文'}
+              </button>
+            </div>
+            <div className="flex items-center">
+              <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Windows */}
-      <div className={`relative ${isMobile ? 'px-2 space-y-3 pb-4' : 'container mx-auto px-4 pt-8'}`}>
+      <div className={`relative ${isMobile ? `px-2 space-y-3 pb-4 ${desktopStyle === 'claude' ? 'pt-20' : 'pt-8'}` : 'container mx-auto px-4 pt-8'}`}>
         {isMobile ? (
           // Mobile: Stack windows vertically (simplified, only Mac/Win)
           windows.map((window) => {
@@ -569,9 +679,9 @@ export default function Home() {
                 key={window.id}
                 title={window.title}
                 onClose={() => closeWindow(window.id)}
-                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}
+                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : desktopStyle === 'claude' ? 'bg-black border border-gray-400 rounded-none shadow-none font-mono' : 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}
                 isMobile={isMobile}
-                desktopStyle={desktopStyle === 'windows' ? 'windows' : 'mac'} // Mobile defaults to Mac if not Windows
+                desktopStyle={desktopStyle} // Pass the actual theme instead of defaulting to Mac
               >
                 {window.id.startsWith('note-') ? (
                   <NoteWindow desktopStyle={desktopStyle} />
