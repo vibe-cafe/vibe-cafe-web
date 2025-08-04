@@ -115,9 +115,9 @@ export default function ThemedWindow({
       break;
     case 'claude':
       baseClasses += ' bg-black border border-white rounded-none shadow-none font-mono';
-      titleBarClasses += ' bg-black border-b border-white';
+      titleBarClasses += ' bg-black';
       titleTextClasses += ' text-white text-sm font-bold';
-      closeButtonClasses += ' w-5 h-5 bg-black border border-white text-white text-xs rounded-none hover:bg-white hover:text-black';
+      closeButtonClasses += ' px-2 py-1 bg-black text-white text-xs rounded-none hover:bg-white hover:text-black';
       contentClasses += ' p-4';
       break;
     default: // Mac
@@ -161,7 +161,7 @@ export default function ThemedWindow({
             onClick={(e) => { e.stopPropagation(); onClose?.(); }}
             className={closeButtonClasses}
           >
-            ×
+            {desktopStyle === 'claude' ? 'close' : '×'}
           </button>
         </div>
       )}

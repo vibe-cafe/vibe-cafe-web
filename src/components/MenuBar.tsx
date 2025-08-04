@@ -156,6 +156,13 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
                   {renderCheckmark(currentStyle, 'linux')}
                   Linux
                 </button>
+                <button
+                  className={getMenuItemStyle()}
+                  onClick={() => { onChangeDesktopStyle('claude'); setActiveMenu(null); }}
+                >
+                  {renderCheckmark(currentStyle, 'claude')}
+                  Claude Code
+                </button>
               </div>
             )}
           </div>
