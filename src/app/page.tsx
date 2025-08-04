@@ -426,7 +426,7 @@ export default function Home() {
           {desktopStyle === 'claude' && (
             <div className="fixed top-4 left-4 bg-black border border-[#DE7356] px-6 py-2 z-40 min-w-[400px]">
               <div className="flex items-center gap-4 text-[#DE7356] font-mono text-sm">
-                <span>🤖</span>
+                <span>✻</span>
                 
                 {/* VibeCafé Menu with Dropdown */}
                 <div className="relative menu-item">
