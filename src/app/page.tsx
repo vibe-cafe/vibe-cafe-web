@@ -70,7 +70,7 @@ export default function Home() {
   const [hydrated, setHydrated] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
-  const { windows, setWindows, toggleWindow, closeWindow, focusWindow, emptyTrash, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
+  const { windows, setWindows, toggleWindow, closeWindow, focusWindow, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile, width: viewportWidth, height: viewportHeight } = useWindowSize();
   const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux' | 'claude'>(() => {
     if (typeof window !== 'undefined') {
@@ -385,7 +385,6 @@ export default function Home() {
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-row gap-4 bg-white/80 border border-black rounded-2xl px-6 py-2 shadow-lg backdrop-blur z-40">
               {fileIcons.map(icon => {
                 const window = windows.find(w => w.id === icon.id);
-                if (window?.isDeleted) return null;
                 return (
                   <FileIcon
                     key={icon.id}
@@ -407,7 +406,6 @@ export default function Home() {
               <AnimatePresence mode="popLayout">
                 {fileIcons.map(icon => {
                   const window = windows.find(w => w.id === icon.id);
-                  if (window?.isDeleted) return null;
                   return (
                     <FileIcon
                       key={icon.id}
@@ -538,7 +536,6 @@ export default function Home() {
               <div className="flex items-center gap-4 text-white font-mono text-sm">
                 {fileIcons.map(icon => {
                   const window = windows.find(w => w.id === icon.id);
-                  if (window?.isDeleted) return null;
                   return (
                     <button
                       key={icon.id}
@@ -553,20 +550,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Trash Icon */}
-          {desktopStyle !== 'claude' && (
-            <div className="fixed bottom-4 right-4 z-40">
-              <FileIcon
-                key="trash"
-                name="Trash"
-                type="app"
-                icon="🗑️"
-                onClick={emptyTrash}
-                isOpen={false}
-                desktopStyle={desktopStyle}
-              />
-            </div>
-          )}
+
         </>
       )}
 
@@ -575,7 +559,7 @@ export default function Home() {
         {isMobile ? (
           // Mobile: Stack windows vertically (simplified, only Mac/Win)
           windows.map((window) => {
-            if (!window.isOpen || window.isDeleted) return null;
+            if (!window.isOpen) return null;
             return (
               <MacWindow
                 key={window.id}
@@ -598,7 +582,7 @@ export default function Home() {
           <>
             <AnimatePresence mode="popLayout">
               {windows.map((window) => {
-                if (!window.isOpen || window.isDeleted) return null;
+                if (!window.isOpen) return null;
                 return (
                   <ManagedWindow
                     key={window.id}
@@ -609,7 +593,7 @@ export default function Home() {
                     onFocus={() => focusWindow(window.id)}
                     zIndex={window.zIndex}
                     position={window.position}
-                    isDeleted={window.isDeleted}
+
                     size={window.size}
                     className={getWindowStyle(desktopStyle)} // Apply theme class
                     desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow

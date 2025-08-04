@@ -22,7 +22,6 @@ export interface Window {
   position: { x: number; y: number };
   size?: { width: number; height: number };
   lastPosition?: { x: number; y: number };
-  isDeleted?: boolean;
 }
 
 // Default window dimensions and spacing
@@ -75,7 +74,7 @@ interface WindowManagerProps {
   onFocus: () => void;
   zIndex: number;
   position: { x: number; y: number };
-  isDeleted?: boolean;
+
   size?: { width: number; height: number };
   className?: string;
   desktopStyle?: 'mac' | 'windows' | 'linux' | 'claude';
@@ -326,23 +325,7 @@ export const useWindowManager = (initialWindows: Window[]) => {
     };
   }, [updateWindowPosition]);
 
-  const emptyTrash = async () => {
-    // First close all windows sequentially
-    for (let i = 0; i < windows.length; i++) {
-      setWindows(prev => prev.map(w => 
-        w.id === windows[i].id ? { ...w, isOpen: false } : w
-      ));
-      await new Promise(resolve => setTimeout(resolve, CLOSE_WINDOW_DELAY));
-    }
 
-    // Then delete icons one by one
-    for (let i = 0; i < windows.length; i++) {
-      setWindows(prev => prev.map(w => 
-        w.id === windows[i].id ? { ...w, isDeleted: true } : w
-      ));
-      await new Promise(resolve => setTimeout(resolve, DELETE_ICON_DELAY));
-    }
-  };
 
   return {
     windows,
@@ -350,7 +333,6 @@ export const useWindowManager = (initialWindows: Window[]) => {
     toggleWindow,
     closeWindow,
     focusWindow,
-    emptyTrash,
     updateWindowPosition
   };
 } 
