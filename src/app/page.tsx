@@ -92,7 +92,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition]);
+  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition, windows]);
 
   useEffect(() => {
     setHydrated(true);
@@ -490,25 +490,25 @@ export default function Home() {
                         onClick={() => { setDesktopStyle('mac'); setActiveMenu(null); }}
                         className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                       >
-                        {desktopStyle === 'mac' ? '✔ ' : ''}Mac
+                        {(desktopStyle as string) === 'mac' ? '✔ ' : ''}Mac
                       </button>
                       <button
                         onClick={() => { setDesktopStyle('windows'); setActiveMenu(null); }}
                         className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                       >
-                        {desktopStyle === 'windows' ? '✔ ' : ''}Windows
+                        {(desktopStyle as string) === 'windows' ? '✔ ' : ''}Windows
                       </button>
                       <button
                         onClick={() => { setDesktopStyle('linux'); setActiveMenu(null); }}
                         className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                       >
-                        {desktopStyle === 'linux' ? '✔ ' : ''}Linux
+                        {(desktopStyle as string) === 'linux' ? '✔ ' : ''}Linux
                       </button>
                       <button
                         onClick={() => { setDesktopStyle('claude'); setActiveMenu(null); }}
                         className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                       >
-                        {desktopStyle === 'claude' ? '✔ ' : ''}Claude Code
+                        {(desktopStyle as string) === 'claude' ? '✔ ' : ''}Claude Code
                       </button>
                     </div>
                   )}
@@ -627,25 +627,25 @@ export default function Home() {
                       onClick={() => { setDesktopStyle('mac'); setActiveMenu(null); }}
                       className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                     >
-                      {desktopStyle === 'mac' ? '✔ ' : ''}Mac
+                      {(desktopStyle as string) === 'mac' ? '✔ ' : ''}Mac
                     </button>
                     <button
                       onClick={() => { setDesktopStyle('windows'); setActiveMenu(null); }}
                       className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                     >
-                      {desktopStyle === 'windows' ? '✔ ' : ''}Windows
+                      {(desktopStyle as string) === 'windows' ? '✔ ' : ''}Windows
                     </button>
                     <button
                       onClick={() => { setDesktopStyle('linux'); setActiveMenu(null); }}
                       className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                     >
-                      {desktopStyle === 'linux' ? '✔ ' : ''}Linux
+                      {(desktopStyle as string) === 'linux' ? '✔ ' : ''}Linux
                     </button>
                     <button
                       onClick={() => { setDesktopStyle('claude'); setActiveMenu(null); }}
                       className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
                     >
-                      {desktopStyle === 'claude' ? '✔ ' : ''}Claude Code
+                      {(desktopStyle as string) === 'claude' ? '✔ ' : ''}Claude Code
                     </button>
                   </div>
                 )}

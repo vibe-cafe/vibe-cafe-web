@@ -30,9 +30,7 @@ const WINDOW_HEIGHT = 240;
 const MARGIN = 80;
 const OFFSET = 80;
 
-// Animation delays
-const CLOSE_WINDOW_DELAY = 200;
-const DELETE_ICON_DELAY = 100;
+
 
 // Calculate initial window positions in a grid layout without overlap
 export const calculateInitialPosition = (
