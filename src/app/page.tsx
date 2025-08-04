@@ -21,12 +21,14 @@ const WINDOWS_CONFIG = [
     title: 'About.txt',
     isOpen: true,
     zIndex: 1,
+    size: { width: 400, height: 300 }
   },
   { 
     id: 'manifesto',
     title: 'Manifesto.txt',
     isOpen: true,
     zIndex: 2,
+    size: { width: 450, height: 380 }
   },
   { 
     id: 'vibeCafe',
@@ -250,8 +252,8 @@ export default function Home() {
     switch (windowId) {
       case 'about':
         return (
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 text-black">
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-black rounded-lg flex items-center justify-center p-2 md:p-3 aspect-square">
+          <div className="flex flex-col items-center gap-6 text-black p-4">
+            <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3 aspect-square">
               <Image
                 src="/images/vibe-logo.jpeg"
                 alt="Vibe Cafe Logo"
@@ -261,19 +263,31 @@ export default function Home() {
                 priority
               />
             </div>
-            <div className="text-center md:text-left">
-              <h1 className="text-xl md:text-2xl font-bold mb-2 text-black">{t('hero.title')}</h1>
-              <p className="text-sm text-gray-800 mb-2">{t('hero.subtitle')}</p>
-              <p className="text-sm text-gray-600">{t('hero.description')}</p>
+            <div className="text-center space-y-3">
+              <h1 className="text-2xl font-bold text-black">{t('hero.title')}</h1>
+              <p className="text-sm text-gray-800">{t('hero.subtitle')}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">{t('hero.description')}</p>
             </div>
           </div>
         );
       case 'manifesto':
         return (
-          <div className="space-y-3 text-sm text-black">
-            <p className="text-gray-800">{t('manifesto.text1')}</p>
-            <p className="text-gray-800">{t('manifesto.text2')}</p>
-            <p className="text-gray-800">{t('manifesto.text3')}</p>
+          <div className="space-y-5 text-sm text-black p-5">
+            <div className="space-y-3">
+              <h3 className="font-bold text-sm text-black leading-tight">{t('manifesto.vision')}</h3>
+              <h3 className="font-bold text-sm text-black leading-tight">{t('manifesto.mission')}</h3>
+            </div>
+            <div className="space-y-4 pt-3 border-t border-gray-200">
+              <div className="space-y-1">
+                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text1')}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text2')}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text3')}</p>
+              </div>
+            </div>
           </div>
         );
       case 'vibeCafe':
