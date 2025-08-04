@@ -114,7 +114,7 @@ export default function ThemedWindow({
       contentClasses += ' p-3';
       break;
     case 'claude':
-      baseClasses += ' bg-black border border-white rounded-none shadow-none font-mono';
+      baseClasses += ' bg-black border border-gray-400 rounded-none shadow-none font-mono';
       titleBarClasses += ' bg-black';
       titleTextClasses += ' text-white text-sm font-bold';
       closeButtonClasses += ' px-2 py-1 bg-black text-white text-xs rounded-none hover:bg-white hover:text-black';

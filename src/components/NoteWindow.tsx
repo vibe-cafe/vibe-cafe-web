@@ -29,7 +29,7 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
       case 'linux':
         return 'bg-[#DFDFDF] border-t border-[#B5B5B5]';
       case 'claude':
-        return 'bg-black border-t border-white';
+        return 'bg-black border-t border-gray-400';
       default:
         return 'bg-white';
     }
@@ -42,7 +42,7 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
       case 'linux':
         return 'px-3 py-1 bg-gradient-to-b from-[#F0F0F0] to-[#E3E3E3] border border-[#B5B5B5] rounded text-sm font-[\'Liberation_Sans\'] hover:from-[#E3E3E3] hover:to-[#D6D6D6] active:from-[#D6D6D6] active:to-[#D6D6D6] cursor-pointer';
       case 'claude':
-        return 'px-3 py-1 bg-black text-white border border-white rounded-none text-sm font-mono hover:bg-white hover:text-black cursor-pointer';
+        return 'px-3 py-1 bg-black text-white border border-gray-400 rounded-none text-sm font-mono hover:bg-white hover:text-black cursor-pointer';
       default:
         return 'px-3 py-0.5 bg-[#E8E8E8] text-black rounded text-xs font-chicago hover:bg-[#D0D0D0] cursor-pointer';
     }

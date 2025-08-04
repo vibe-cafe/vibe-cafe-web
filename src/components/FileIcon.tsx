@@ -28,7 +28,7 @@ export default function FileIcon({
       case 'linux':
         return 'w-16 h-16 bg-[#EFEFEF] border border-[#B5B5B5] rounded flex items-center justify-center group-hover:border-[#6A6A6A]';
       case 'claude':
-        return 'w-16 h-16 bg-black border border-white rounded-none flex items-center justify-center group-hover:border-gray-300';
+        return 'w-16 h-16 bg-black border border-gray-400 rounded-none flex items-center justify-center group-hover:border-gray-300';
       default: // mac
         return 'w-16 h-16 bg-white border border-black rounded flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow';
     }

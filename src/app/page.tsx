@@ -262,7 +262,7 @@ export default function Home() {
       case 'linux':
         return 'border border-[#6A6A6A] rounded shadow-md bg-[#DFDFDF] font-[\'Liberation_Sans\']';
       case 'claude':
-        return 'border border-white rounded-none shadow-none bg-black font-mono';
+        return 'border border-gray-400 rounded-none shadow-none bg-black font-mono';
       default: // mac
         return 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'; // Default Mac style for ManagedWindow
     }
@@ -532,8 +532,12 @@ export default function Home() {
 
           {/* Claude Terminal-style Bottom App Icons */}
           {desktopStyle === 'claude' && (
-            <div className="fixed bottom-4 left-4 bg-black border border-white px-4 py-2 z-40">
+            <div className="fixed bottom-4 left-4 bg-black border border-gray-400 px-4 py-2 z-40">
               <div className="flex items-center gap-4 text-white font-mono text-sm">
+                {/* Bash Command Input Style */}
+                <span className="text-green-400">$</span>
+                <span className="animate-pulse">_</span>
+                
                 {fileIcons.map(icon => {
                   const window = windows.find(w => w.id === icon.id);
                   return (
