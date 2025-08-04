@@ -92,7 +92,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition, windows]);
+  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition]);
 
   useEffect(() => {
     setHydrated(true);
