@@ -14,6 +14,7 @@ i18n
           hero: {
             title: 'VibeCafé',
             subtitle: 'Keep the vibe',
+            description: 'A community and service for AI one-person creators',
           },
           manifesto: {
             title: 'Manifesto',
@@ -41,6 +42,7 @@ i18n
           hero: {
             title: 'VibeCafé',
             subtitle: 'Keep the vibe',
+            description: '专注于 AI 一人创作者的社群与服务',
           },
           manifesto: {
             title: 'Manifesto',

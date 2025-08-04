@@ -251,19 +251,20 @@ export default function Home() {
       case 'about':
         return (
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 text-black">
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-black rounded-lg flex items-center justify-center p-2 md:p-3">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-black rounded-lg flex items-center justify-center p-2 md:p-3 aspect-square">
               <Image
                 src="/images/vibe-logo.jpeg"
                 alt="Vibe Cafe Logo"
                 width={72}
                 height={72}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover rounded"
                 priority
               />
             </div>
             <div className="text-center md:text-left">
               <h1 className="text-xl md:text-2xl font-bold mb-2 text-black">{t('hero.title')}</h1>
-              <p className="text-sm text-gray-800">{t('hero.subtitle')}</p>
+              <p className="text-sm text-gray-800 mb-2">{t('hero.subtitle')}</p>
+              <p className="text-sm text-gray-600">{t('hero.description')}</p>
             </div>
           </div>
         );
