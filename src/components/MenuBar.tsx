@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 
 export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: { 
-  desktopStyle: 'mac' | 'windows' | 'linux'; 
-  onChangeDesktopStyle: (style: 'mac' | 'windows' | 'linux') => void 
+  desktopStyle: 'mac' | 'windows' | 'linux' | 'claude'; 
+  onChangeDesktopStyle: (style: 'mac' | 'windows' | 'linux' | 'claude') => void 
 }) {
   const { i18n } = useTranslation();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -39,6 +39,10 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
         baseStyle += ' text-white hover:bg-[#5A5A5A]';
         if (isActive) baseStyle += ' font-bold';
         break;
+      case 'claude':
+        baseStyle += ' text-black hover:bg-[#C05A3F]';
+        if (isActive) baseStyle += ' font-bold';
+        break;
       default: // Mac & Windows
         baseStyle += ' text-black hover:bg-gray-200';
         if (isActive) baseStyle += ' font-bold';
@@ -47,9 +51,9 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
     return baseStyle;
   }
 
-  const menuTextStyle = desktopStyle === 'linux' ? 'text-white' : 'text-black';
-  const menuHoverStyle = desktopStyle === 'linux' ? 'hover:bg-[#5A5A5A] rounded' : 'hover:bg-black hover:text-white';
-  const dropdownStyle = desktopStyle === 'linux' ? 'bg-[#3A3A3A] border border-[#2A2A2A]' : 'bg-white border border-black';
+  const menuTextStyle = desktopStyle === 'linux' ? 'text-white' : desktopStyle === 'claude' ? 'text-black' : 'text-black';
+  const menuHoverStyle = desktopStyle === 'linux' ? 'hover:bg-[#5A5A5A] rounded' : desktopStyle === 'claude' ? 'hover:bg-[#C05A3F] rounded' : 'hover:bg-black hover:text-white';
+  const dropdownStyle = desktopStyle === 'linux' ? 'bg-[#3A3A3A] border border-[#2A2A2A]' : desktopStyle === 'claude' ? 'bg-black border border-[#DE7356]' : 'bg-white border border-black';
 
   const currentStyle = String(desktopStyle);
 
@@ -176,13 +180,21 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
     <div className={`fixed top-0 left-0 right-0 h-6 flex items-center px-2 z-50 ${
       desktopStyle === 'linux' 
         ? 'bg-gradient-to-b from-[#4A4A4A] to-[#3A3A3A] border-b border-[#2A2A2A]'
+        : desktopStyle === 'claude'
+        ? 'bg-[#DE7356] border-b border-[#DE7356]'
         : 'bg-white border-b border-black'
     }`}>
-      <div className={`flex items-center gap-4 text-xs relative ${desktopStyle === 'linux' ? 'font-[Liberation_Sans]' : 'font-chicago'}`}>
+      <div className={`flex items-center gap-4 text-xs relative ${
+        desktopStyle === 'linux' ? 'font-[Liberation_Sans]' : 
+        desktopStyle === 'claude' ? 'font-mono' : 
+        'font-chicago'
+      }`}>
         {/* OS Menu Icon */}
         <div className="flex items-center">
           {desktopStyle === 'mac' ? (
             <span className="text-lg leading-none">🍎</span>
+          ) : desktopStyle === 'claude' ? (
+            <span className="text-lg leading-none">🤖</span>
           ) : (
             <span className="text-lg leading-none">🐧</span>
           )}
@@ -266,6 +278,13 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
               >
                 {renderCheckmark(currentStyle, 'linux')}
                 Linux
+              </button>
+              <button
+                className={getMenuItemStyle()}
+                onClick={() => { onChangeDesktopStyle('claude'); setActiveMenu(null); }}
+              >
+                {renderCheckmark(currentStyle, 'claude')}
+                Claude Code
               </button>
             </div>
           )}

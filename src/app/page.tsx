@@ -68,12 +68,13 @@ const INITIAL_WINDOWS = WINDOWS_CONFIG.map((window, index) => ({
 
 export default function Home() {
   const [hydrated, setHydrated] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
   const { windows, setWindows, toggleWindow, closeWindow, focusWindow, emptyTrash, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile, width: viewportWidth, height: viewportHeight } = useWindowSize();
-  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux'>(() => {
+  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux' | 'claude'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux') || 'mac';
+      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux' | 'claude') || 'mac';
     }
     return 'mac';
   });
@@ -95,6 +96,19 @@ export default function Home() {
 
   useEffect(() => {
     setHydrated(true);
+  }, []);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.menu-item')) {
+        setActiveMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   const handleNewWindow = useCallback(() => {
@@ -221,6 +235,8 @@ export default function Home() {
         return 'font-[\'MS_Sans_Serif\']';
       case 'linux':
         return 'font-[\'Liberation_Sans\']';
+      case 'claude':
+        return 'font-mono';
       default: // mac
         return 'font-chicago';
     }
@@ -232,17 +248,21 @@ export default function Home() {
         return 'url("/wallpapers/windows.webp")';
       case 'linux':
         return 'url("/wallpapers/linxus.jpg")';
+      case 'claude':
+        return 'none'; // Black background for Claude Code theme
       default: // mac
         return 'url("/wallpapers/mac.jpg")';
     }
   };
 
-  const getWindowStyle = (style: 'mac' | 'windows' | 'linux') => {
+  const getWindowStyle = (style: 'mac' | 'windows' | 'linux' | 'claude') => {
     switch (style) {
       case 'windows':
         return 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']';
       case 'linux':
         return 'border border-[#6A6A6A] rounded shadow-md bg-[#DFDFDF] font-[\'Liberation_Sans\']';
+      case 'claude':
+        return 'border border-white rounded-none shadow-none bg-black font-mono';
       default: // mac
         return 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'; // Default Mac style for ManagedWindow
     }
@@ -252,7 +272,7 @@ export default function Home() {
     switch (windowId) {
       case 'about':
         return (
-          <div className="flex flex-col items-center gap-6 text-black p-4">
+                      <div className={`flex flex-col items-center gap-6 p-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
             <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3 aspect-square">
               <Image
                 src="/images/vibe-logo.jpeg"
@@ -265,47 +285,47 @@ export default function Home() {
             </div>
             <div className="text-center space-y-3">
               <div className="flex items-center justify-center gap-2">
-                <h1 className="text-2xl font-bold text-black">{t('hero.title')}</h1>
-                <span className="text-sm text-gray-800">|</span>
-                <p className="text-sm text-gray-800 italic">{t('hero.subtitle')}</p>
+                <h1 className={`text-2xl font-bold ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('hero.title')}</h1>
+                <span className={`text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>|</span>
+                <p className={`text-sm italic ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('hero.subtitle')}</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">{t('hero.description')}</p>
+              <p className={`text-sm leading-relaxed ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-600'}`}>{t('hero.description')}</p>
             </div>
           </div>
         );
       case 'manifesto':
         return (
-          <div className="space-y-5 text-sm text-black p-5">
+                      <div className={`space-y-5 text-sm p-5 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
             <div className="space-y-3">
-              <h3 className="font-bold text-sm text-black leading-tight">{t('manifesto.vision')}</h3>
-              <h3 className="font-bold text-sm text-black leading-tight">{t('manifesto.mission')}</h3>
+                              <h3 className={`font-bold text-sm leading-tight ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('manifesto.vision')}</h3>
+                <h3 className={`font-bold text-sm leading-tight ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('manifesto.mission')}</h3>
             </div>
-            <div className="space-y-4 pt-3 border-t border-gray-200">
-              <div className="space-y-1">
-                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text1')}</p>
+                          <div className={`space-y-4 pt-3 border-t ${desktopStyle === 'claude' ? 'border-white' : 'border-gray-200'}`}>
+                <div className="space-y-1">
+                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text1')}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text2')}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text3')}</p>
+                </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text2')}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-gray-800 leading-relaxed text-sm">{t('manifesto.text3')}</p>
-              </div>
-            </div>
           </div>
         );
       case 'vibeCafe':
         return (
-          <div className="space-y-2 md:space-y-3 text-black">
-            <h3 className="font-bold text-base md:text-lg text-black">{t('vibeCafe.title')}</h3>
-            <p className="text-xs text-gray-700 italic">{t('vibeCafe.comingSoon')}</p>
+                      <div className={`space-y-2 md:space-y-3 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
+                          <h3 className={`font-bold text-base md:text-lg ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('vibeCafe.title')}</h3>
+              <p className={`text-xs italic ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-700'}`}>{t('vibeCafe.comingSoon')}</p>
           </div>
         );
       case 'contact':
         return (
-          <div className="space-y-4 text-black">
-            <h3 className="font-bold text-base text-black">{t('contact.title')}</h3>
+                      <div className={`space-y-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
+                          <h3 className={`font-bold text-base ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('contact.title')}</h3>
             <div className="flex flex-col items-center gap-4">
-              <div className="p-2 bg-white rounded-lg shadow-sm">
+                              <div className={`p-2 rounded-lg shadow-sm ${desktopStyle === 'claude' ? 'bg-black border border-white' : 'bg-white'}`}>
                 <Image 
                   src="/images/vibe-friends-qr.jpg" 
                   alt="Vibe Friends QR Code" 
@@ -350,9 +370,12 @@ export default function Home() {
       backgroundImage: getBackgroundImage(),
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      backgroundColor: desktopStyle === 'claude' ? '#000000' : 'transparent'
     }}>
-      <MenuBar desktopStyle={desktopStyle} onChangeDesktopStyle={setDesktopStyle} />
+      {desktopStyle !== 'claude' && (
+        <MenuBar desktopStyle={desktopStyle} onChangeDesktopStyle={setDesktopStyle} />
+      )}
       
       {/* Desktop Icons - Hide on Mobile */}
       {!isMobile && (
@@ -401,18 +424,149 @@ export default function Home() {
             </div>
           )}
 
+          {/* Claude Terminal-style Top Menu - Only for Claude theme */}
+          {desktopStyle === 'claude' && (
+            <div className="fixed top-4 left-4 bg-black border border-[#DE7356] px-6 py-2 z-40 min-w-[400px]">
+              <div className="flex items-center gap-4 text-[#DE7356] font-mono text-sm">
+                <span>🤖</span>
+                
+                {/* VibeCafé Menu with Dropdown */}
+                <div className="relative menu-item">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveMenu(activeMenu === 'vibeCafe' ? null : 'vibeCafe');
+                    }}
+                    className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                  >
+                    VibeCafé
+                  </button>
+                  {activeMenu === 'vibeCafe' && (
+                    <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[140px]">
+                      <button
+                        onClick={() => {
+                          window.dispatchEvent(new CustomEvent('openNewWindow'));
+                          setActiveMenu(null);
+                        }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        New
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          setActiveMenu(null);
+                        }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        Copy link
+                      </button>
+                      <button
+                        onClick={() => {
+                          const url = encodeURIComponent(window.location.href);
+                          window.open(`https://twitter.com/intent/tweet?url=${url}`, '_blank');
+                          setActiveMenu(null);
+                        }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        Share to X
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* View Menu with Dropdown */}
+                <div className="relative menu-item">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveMenu(activeMenu === 'view' ? null : 'view');
+                    }}
+                    className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                  >
+                    View
+                  </button>
+                  {activeMenu === 'view' && (
+                    <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[160px]">
+                      <button
+                        onClick={() => { setDesktopStyle('mac'); setActiveMenu(null); }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        {desktopStyle === 'mac' ? '✔ ' : ''}Mac
+                      </button>
+                      <button
+                        onClick={() => { setDesktopStyle('windows'); setActiveMenu(null); }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        {desktopStyle === 'windows' ? '✔ ' : ''}Windows
+                      </button>
+                      <button
+                        onClick={() => { setDesktopStyle('linux'); setActiveMenu(null); }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        {desktopStyle === 'linux' ? '✔ ' : ''}Linux
+                      </button>
+                      <button
+                        onClick={() => { setDesktopStyle('claude'); setActiveMenu(null); }}
+                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                      >
+                        {desktopStyle === 'claude' ? '✔ ' : ''}Claude Code
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
+                <button
+                  onClick={() => {
+                    const newLang = i18n.language === 'zh' ? 'en' : 'zh';
+                    i18n.changeLanguage(newLang);
+                  }}
+                  className="px-2 py-1 hover:bg-[#DE7356] hover:text-black"
+                >
+                  {i18n.language === 'zh' ? 'EN' : '中文'}
+                </button>
+
+
+                <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Claude Terminal-style Bottom App Icons */}
+          {desktopStyle === 'claude' && (
+            <div className="fixed bottom-4 left-4 bg-black border border-white px-4 py-2 z-40">
+              <div className="flex items-center gap-4 text-white font-mono text-sm">
+                {fileIcons.map(icon => {
+                  const window = windows.find(w => w.id === icon.id);
+                  if (window?.isDeleted) return null;
+                  return (
+                    <button
+                      key={icon.id}
+                      onClick={() => toggleWindow(icon.id)}
+                      className={`px-2 py-1 ${window?.isOpen ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`}
+                    >
+                      {icon.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Trash Icon */}
-          <div className="fixed bottom-4 right-4 z-40">
-            <FileIcon
-              key="trash"
-              name="Trash"
-              type="app"
-              icon="🗑️"
-              onClick={emptyTrash}
-              isOpen={false}
-              desktopStyle={desktopStyle}
-            />
-          </div>
+          {desktopStyle !== 'claude' && (
+            <div className="fixed bottom-4 right-4 z-40">
+              <FileIcon
+                key="trash"
+                name="Trash"
+                type="app"
+                icon="🗑️"
+                onClick={emptyTrash}
+                isOpen={false}
+                desktopStyle={desktopStyle}
+              />
+            </div>
+          )}
         </>
       )}
 

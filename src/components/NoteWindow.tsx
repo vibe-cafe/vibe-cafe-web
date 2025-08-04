@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 type NoteWindowProps = {
-  desktopStyle?: 'mac' | 'windows' | 'linux';
+  desktopStyle?: 'mac' | 'windows' | 'linux' | 'claude';
 };
 
 export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
@@ -15,6 +15,8 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
         return 'bg-[#C0C0C0] font-[\'MS_Sans_Serif\'] text-sm';
       case 'linux':
         return 'bg-[#FFFFFF] font-[\'Liberation_Sans\'] text-sm';
+      case 'claude':
+        return 'bg-black text-white font-mono text-sm';
       default:
         return 'bg-white font-mono text-sm';
     }
@@ -26,6 +28,8 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
         return 'bg-[#C0C0C0]';
       case 'linux':
         return 'bg-[#DFDFDF] border-t border-[#B5B5B5]';
+      case 'claude':
+        return 'bg-black border-t border-white';
       default:
         return 'bg-white';
     }
@@ -37,6 +41,8 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
         return 'px-4 py-1 border-2 border-[#808080] bg-[#C0C0C0] active:border-[#404040] text-sm font-[\'MS_Sans_Serif\'] shadow-[1px_1px_0px_0px_#FFFFFF,_-1px_-1px_0px_0px_#808080] cursor-pointer';
       case 'linux':
         return 'px-3 py-1 bg-gradient-to-b from-[#F0F0F0] to-[#E3E3E3] border border-[#B5B5B5] rounded text-sm font-[\'Liberation_Sans\'] hover:from-[#E3E3E3] hover:to-[#D6D6D6] active:from-[#D6D6D6] active:to-[#D6D6D6] cursor-pointer';
+      case 'claude':
+        return 'px-3 py-1 bg-black text-white border border-white rounded-none text-sm font-mono hover:bg-white hover:text-black cursor-pointer';
       default:
         return 'px-3 py-0.5 bg-[#E8E8E8] text-black rounded text-xs font-chicago hover:bg-[#D0D0D0] cursor-pointer';
     }

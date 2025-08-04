@@ -9,7 +9,7 @@ interface ThemedWindowProps {
   onClose?: () => void;
   onStartResize?: () => void;
   isMobile?: boolean;
-  desktopStyle?: 'mac' | 'windows' | 'linux';
+  desktopStyle?: 'mac' | 'windows' | 'linux' | 'claude';
 }
 
 export default function ThemedWindow({ 
@@ -112,6 +112,13 @@ export default function ThemedWindow({
       titleTextClasses += ' text-white text-sm';
       closeButtonClasses += ' w-5 h-5 bg-gradient-to-b from-[#E07070] to-[#C05050] border border-[#A04040] text-white text-xs rounded hover:from-[#F08080] hover:to-[#D06060]';
       contentClasses += ' p-3';
+      break;
+    case 'claude':
+      baseClasses += ' bg-black border border-white rounded-none shadow-none font-mono';
+      titleBarClasses += ' bg-black border-b border-white';
+      titleTextClasses += ' text-white text-sm font-bold';
+      closeButtonClasses += ' w-5 h-5 bg-black border border-white text-white text-xs rounded-none hover:bg-white hover:text-black';
+      contentClasses += ' p-4';
       break;
     default: // Mac
       baseClasses += ' bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]';

@@ -78,7 +78,7 @@ interface WindowManagerProps {
   isDeleted?: boolean;
   size?: { width: number; height: number };
   className?: string;
-  desktopStyle?: 'mac' | 'windows' | 'linux';
+  desktopStyle?: 'mac' | 'windows' | 'linux' | 'claude';
 }
 
 export function ManagedWindow({ 
