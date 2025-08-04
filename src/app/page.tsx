@@ -264,8 +264,11 @@ export default function Home() {
               />
             </div>
             <div className="text-center space-y-3">
-              <h1 className="text-2xl font-bold text-black">{t('hero.title')}</h1>
-              <p className="text-sm text-gray-800">{t('hero.subtitle')}</p>
+              <div className="flex items-center justify-center gap-2">
+                <h1 className="text-2xl font-bold text-black">{t('hero.title')}</h1>
+                <span className="text-sm text-gray-800">|</span>
+                <p className="text-sm text-gray-800 italic">{t('hero.subtitle')}</p>
+              </div>
               <p className="text-sm text-gray-600 leading-relaxed">{t('hero.description')}</p>
             </div>
           </div>
