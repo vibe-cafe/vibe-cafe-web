@@ -273,13 +273,13 @@ export default function Home() {
       case 'about':
         return (
                       <div className={`flex flex-col items-center gap-6 p-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
-            <div className="w-24 h-24 bg-black rounded-lg flex items-center justify-center p-3 aspect-square">
+            <div className="flex items-center justify-center">
               <Image
-                src="/images/vibe-logo.jpeg"
+                src="/images/vibe-cafe.png"
                 alt="Vibe Cafe Logo"
-                width={72}
-                height={72}
-                className="w-full h-full object-cover rounded"
+                width={240}
+                height={160}
+                className="w-auto h-auto max-w-[240px] max-h-[160px] object-contain"
                 priority
               />
             </div>
