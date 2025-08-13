@@ -38,29 +38,23 @@ const WINDOWS_CONFIG = [
     size: { width: 500, height: 600 }
   },
   { 
-    id: 'vibeCafe',
-    title: 'VibeCafe.app',
-    isOpen: false,
-    zIndex: 4,
-  },
-  { 
     id: 'contact',
     title: 'Contact.app',
     isOpen: true,
-    zIndex: 5,
+    zIndex: 4,
   },
   {
     id: 'code',
     title: 'code.mov',
     isOpen: false,
-    zIndex: 6,
+    zIndex: 5,
     size: { width: 400, height: 400 }
   },
   {
     id: 'design',
     title: 'design.figma',
     isOpen: false,
-    zIndex: 7,
+    zIndex: 6,
     size: { width: 600, height: 400 }
   }
 ];
@@ -217,12 +211,6 @@ export default function Home() {
       icon: '🚀',
     },
     {
-      id: 'vibeCafe',
-      name: 'VibeCafe.app',
-      type: 'app' as const,
-      icon: '☕️',
-    },
-    {
       id: 'contact',
       name: 'Contact.app',
       type: 'app' as const,
@@ -334,13 +322,6 @@ export default function Home() {
               className="w-full h-full border-0"
               title="Hacks"
             />
-          </div>
-        );
-      case 'vibeCafe':
-        return (
-                      <div className={`space-y-2 md:space-y-3 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
-                          <h3 className={`font-bold text-base md:text-lg ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('vibeCafe.title')}</h3>
-              <p className={`text-xs italic ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-700'}`}>{t('vibeCafe.comingSoon')}</p>
           </div>
         );
       case 'contact':
