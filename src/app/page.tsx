@@ -31,29 +31,36 @@ const WINDOWS_CONFIG = [
     size: { width: 450, height: 380 }
   },
   { 
+    id: 'hacks',
+    title: 'Hacks.app',
+    isOpen: false,
+    zIndex: 3,
+    size: { width: 500, height: 600 }
+  },
+  { 
     id: 'vibeCafe',
     title: 'VibeCafe.app',
     isOpen: false,
-    zIndex: 3,
+    zIndex: 4,
   },
   { 
     id: 'contact',
     title: 'Contact.app',
     isOpen: true,
-    zIndex: 4,
+    zIndex: 5,
   },
   {
     id: 'code',
     title: 'code.mov',
     isOpen: false,
-    zIndex: 5,
+    zIndex: 6,
     size: { width: 400, height: 400 }
   },
   {
     id: 'design',
     title: 'design.figma',
     isOpen: false,
-    zIndex: 6,
+    zIndex: 7,
     size: { width: 600, height: 400 }
   }
 ];
@@ -204,6 +211,12 @@ export default function Home() {
       type: 'txt' as const,
     },
     {
+      id: 'hacks',
+      name: 'Hacks.app',
+      type: 'app' as const,
+      icon: '🚀',
+    },
+    {
       id: 'vibeCafe',
       name: 'VibeCafe.app',
       type: 'app' as const,
@@ -311,6 +324,16 @@ export default function Home() {
                   <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text3')}</p>
                 </div>
               </div>
+          </div>
+        );
+      case 'hacks':
+        return (
+          <div className="w-full h-full relative">
+            <iframe
+              src="/hacks"
+              className="w-full h-full border-0"
+              title="Hacks"
+            />
           </div>
         );
       case 'vibeCafe':
