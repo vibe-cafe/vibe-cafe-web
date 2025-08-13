@@ -27,7 +27,7 @@ export interface Window {
 // Default window dimensions and spacing
 const WINDOW_WIDTH = 400;
 const WINDOW_HEIGHT = 240;
-const MARGIN = 80;
+const MARGIN = 40;
 const OFFSET = 80;
 
 
