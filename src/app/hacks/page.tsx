@@ -1,11 +1,8 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function HacksPage() {
-  const { t } = useTranslation();
 
   const handleApplyClick = () => {
     // Always redirect to the Feishu form

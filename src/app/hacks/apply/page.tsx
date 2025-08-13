@@ -1,11 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function ApplyPage() {
-  const router = useRouter();
-
   useEffect(() => {
     // Automatically redirect to the Feishu form
     window.location.href = 'https://cvji2p7f0zb.feishu.cn/share/base/form/shrcny72hVeWJTsOh6q5uKOSaJf';

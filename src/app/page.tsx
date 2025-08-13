@@ -4,16 +4,14 @@ import { useTranslation } from 'react-i18next';
 import MenuBar from '@/components/MenuBar';
 import Image from 'next/image';
 import FileIcon from '@/components/FileIcon';
-import { ManagedWindow, useWindowManager, calculateInitialPosition, Window } from '@/components/WindowManager';
+import { ManagedWindow, useWindowManager, calculateInitialPosition } from '@/components/WindowManager';
 import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/ThemedWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 
 // Define constants matching WindowManager.tsx
-const MARGIN = 80;
-const OFFSET = 80;
 
 const WINDOWS_CONFIG = [
   { 
@@ -71,7 +69,7 @@ export default function Home() {
   const [hydrated, setHydrated] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
-  const { windows, setWindows, toggleWindow, closeWindow, focusWindow, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
+  const { windows, toggleWindow, closeWindow, focusWindow, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile, width: viewportWidth, height: viewportHeight } = useWindowSize();
   const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux' | 'claude'>(() => {
     if (typeof window !== 'undefined') {
