@@ -9,7 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import MacWindow from '@/components/ThemedWindow';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect, useCallback } from 'react';
-import NoteWindow from '@/components/NoteWindow';
+
 
 // Define constants matching WindowManager.tsx
 const MARGIN = 80;
@@ -112,62 +112,7 @@ export default function Home() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const handleNewWindow = useCallback(() => {
-    const id = `note-${Date.now()}`;
-    
-    // Find a position that doesn't overlap with existing windows
-    const existingOpenWindows = windows.filter(w => w.isOpen);
-    let position = { x: MARGIN, y: MARGIN };
-    
-    if (existingOpenWindows.length > 0) {
-      // Find the window with the highest Y position (lowest on screen)
-      const lowestWindow = existingOpenWindows.reduce((lowest, win) => {
-        return win.position.y > lowest.position.y ? win : lowest;
-      });
-      
-      // Position the new window below the lowest window
-      position = {
-        x: lowestWindow.position.x,
-        y: lowestWindow.position.y + (lowestWindow.size?.height || 240) + OFFSET
-      };
-      
-      // Check if this would put the window below the viewport
-      if (position.y + 300 > viewportHeight - MARGIN) {
-        // Find the rightmost window
-        const rightmostWindow = existingOpenWindows.reduce((rightmost, win) => {
-          return win.position.x > rightmost.position.x ? win : rightmost;
-        });
-        
-        // Position the new window to the right of the rightmost window
-        position = {
-          x: rightmostWindow.position.x + (rightmostWindow.size?.width || 400) + OFFSET,
-          y: MARGIN
-        };
-        
-        // If this would put the window outside the viewport, start at the beginning
-        if (position.x + 400 > viewportWidth - MARGIN) {
-          position = { x: MARGIN, y: MARGIN };
-        }
-      }
-    }
-    
-    // Add the new note window to the windows array
-    const newWindow = {
-      id,
-      title: 'Untitled.txt',
-      isOpen: true,
-      zIndex: windows.length + 1,
-      position,
-      size: { width: 400, height: 300 }
-    };
-    
-    setWindows((prev: Window[]) => [...prev, newWindow]);
-  }, [windows, viewportWidth, viewportHeight, setWindows]);
 
-  useEffect(() => {
-    window.addEventListener('openNewWindow', handleNewWindow);
-    return () => window.removeEventListener('openNewWindow', handleNewWindow);
-  }, [handleNewWindow]);
 
   // Language persistence
   useEffect(() => {
@@ -445,15 +390,7 @@ export default function Home() {
                   </button>
                   {activeMenu === 'vibeCafe' && (
                     <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[140px]">
-                      <button
-                        onClick={() => {
-                          window.dispatchEvent(new CustomEvent('openNewWindow'));
-                          setActiveMenu(null);
-                        }}
-                        className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
-                      >
-                        New
-                      </button>
+
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(window.location.href);
@@ -687,11 +624,7 @@ export default function Home() {
                 isMobile={isMobile}
                 desktopStyle={desktopStyle} // Pass the actual theme instead of defaulting to Mac
               >
-                {window.id.startsWith('note-') ? (
-                  <NoteWindow desktopStyle={desktopStyle} />
-                ) : (
-                  renderWindowContent(window.id)
-                )}
+                {renderWindowContent(window.id)}
               </MacWindow>
             );
           })
@@ -716,11 +649,7 @@ export default function Home() {
                     className={getWindowStyle(desktopStyle)} // Apply theme class
                     desktopStyle={desktopStyle} // Pass theme to ManagedWindow/ThemedWindow
                   >
-                    {window.id.startsWith('note-') ? (
-                      <NoteWindow desktopStyle={desktopStyle} />
-                    ) : (
-                      renderWindowContent(window.id)
-                    )}
+                    {renderWindowContent(window.id)}
                   </ManagedWindow>
                 );
               })}

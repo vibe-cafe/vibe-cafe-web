@@ -91,15 +91,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
             </button>
             {activeMenu === 'vibeCafe' && (
               <div className={`absolute left-0 bottom-8 w-40 rounded shadow z-50 bg-white border border-black`}>
-                <button
-                  className={getMenuItemStyle()}
-                  onClick={() => {
-                    window.dispatchEvent(new CustomEvent('openNewWindow'));
-                    setActiveMenu(null);
-                  }}
-                >
-                  New
-                </button>
+
                 <button
                   className={getMenuItemStyle()}
                   onClick={() => {
@@ -220,15 +212,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
           </button>
           {activeMenu === 'vibeCafe' && (
             <div className={`absolute left-0 mt-1 w-40 rounded shadow z-50 ${dropdownStyle}`}>
-              <button
-                className={getMenuItemStyle()}
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('openNewWindow'));
-                  setActiveMenu(null);
-                }}
-              >
-                New
-              </button>
+
               <button
                 className={getMenuItemStyle()}
                 onClick={() => {
