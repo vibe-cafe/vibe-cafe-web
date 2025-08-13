@@ -7,6 +7,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {
   title: "VibeCafé - Keep the Vibe",
   description: "A community of Vibe Creators - where innovation meets inspiration",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
