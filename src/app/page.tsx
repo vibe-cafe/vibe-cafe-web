@@ -26,7 +26,7 @@ const WINDOWS_CONFIG = [
     title: 'Manifesto.txt',
     isOpen: true,
     zIndex: 2,
-    size: { width: 450, height: 380 }
+    size: { width: 400, height: 350 }
   },
   { 
     id: 'hacks',
@@ -36,10 +36,11 @@ const WINDOWS_CONFIG = [
     size: { width: 500, height: 600 }
   },
   { 
-    id: 'contact',
-    title: 'Contact.app',
+    id: 'friends',
+    title: 'Friends.app',
     isOpen: true,
     zIndex: 4,
+    size: { width: 400, height: 300 }
   },
   {
     id: 'code',
@@ -154,10 +155,10 @@ export default function Home() {
       icon: '🚀',
     },
     {
-      id: 'contact',
-      name: 'Contact.app',
+      id: 'friends',
+      name: 'Friends.app',
       type: 'app' as const,
-      icon: '📧',
+      icon: '👥',
     },
     {
       id: 'code',
@@ -267,20 +268,72 @@ export default function Home() {
             />
           </div>
         );
-      case 'contact':
+      case 'friends':
         return (
-                      <div className={`space-y-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
-                          <h3 className={`font-bold text-base ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('contact.title')}</h3>
-            <div className="flex flex-col items-center gap-4">
-                              <div className={`p-2 rounded-lg shadow-sm ${desktopStyle === 'claude' ? 'bg-black border border-white' : 'bg-white'}`}>
-                <Image 
-                  src="/images/vibe-friends-qr.jpg" 
-                  alt="Vibe Friends QR Code" 
-                  width={120} 
-                  height={120}
-                  className="rounded"
-                  priority
-                />
+          <div className="w-full h-full flex flex-col items-center justify-center p-2">
+            <div className="w-full">
+              <div className="grid grid-cols-2 gap-4">
+                {/* Vibe Friends Section */}
+                <div className="text-center">
+                  {/* Vibe Friends Logo */}
+                  <div className="mb-4">
+                    <Image 
+                      src="/images/vibe-friends.png" 
+                      alt="Vibe Friends Logo" 
+                      width={300} 
+                      height={150}
+                      className="mx-auto w-full max-w-[150px]"
+                      priority
+                    />
+                  </div>
+                  
+                  {/* Vibe Friends QR Code */}
+                  <div className="mb-4">
+                    <Image 
+                      src="/images/vibe-friends-qr.jpg" 
+                      alt="Vibe Friends QR Code" 
+                      width={150} 
+                      height={150}
+                      className="mx-auto rounded w-full max-w-[100px]"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                {/* Vibe Maker Section */}
+                <div className="text-center">
+                  {/* Vibe Maker Logo */}
+                  <div className="mb-4">
+                    <Image 
+                      src="/images/vibe-maker.png" 
+                      alt="Vibe Maker Logo" 
+                      width={300} 
+                      height={150}
+                      className="mx-auto w-full max-w-[150px]"
+                      priority
+                    />
+                  </div>
+                  
+                  {/* Vibe Maker QR Code */}
+                  <div className="mb-4">
+                    <Image 
+                      src="/images/vibe-maker-qr.jpg" 
+                      alt="Vibe Maker QR Code" 
+                      width={150} 
+                      height={150}
+                      className="mx-auto rounded w-full max-w-[100px]"
+                      priority
+                    />
+                  </div>
+                  
+                  {/* 小红书 Link */}
+                  <button
+                    onClick={() => window.open('https://www.xiaohongshu.com/user/profile/652b967a000000002a037e4d', '_blank')}
+                    className="mx-auto block cursor-pointer text-sm"
+                  >
+                    小红书
+                  </button>
+                </div>
               </div>
             </div>
           </div>
