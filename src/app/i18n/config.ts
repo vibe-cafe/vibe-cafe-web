@@ -37,6 +37,9 @@ i18n
             title: 'Subscribe: VibeFriends',
             button: 'WeChat Official: VibeFriends',
           },
+          hacks: {
+            applyButton: 'Apply Now',
+          },
         },
       },
       zh: {
@@ -66,6 +69,9 @@ i18n
           contact: {
             title: '关注我们：VibeFriends',
             button: '微信公众号：VibeFriends',
+          },
+          hacks: {
+            applyButton: '立刻报名',
           },
         },
       },
