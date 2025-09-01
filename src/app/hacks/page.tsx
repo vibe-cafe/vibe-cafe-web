@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import BackButton from '@/components/BackButton';
 import StructuredData from './StructuredData';
 
 export default function HacksPage() {
@@ -17,6 +18,9 @@ export default function HacksPage() {
     <>
       <StructuredData />
       <main className="min-h-screen bg-black flex flex-col items-center relative">
+      {/* Back Button - Fixed top left */}
+      <BackButton />
+
       {/* Language Switcher - Fixed top right */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSwitcher />
