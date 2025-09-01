@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import StructuredData from './StructuredData';
 
 export default function HacksPage() {
   const { t, i18n } = useTranslation();
@@ -13,7 +14,9 @@ export default function HacksPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black flex flex-col items-center relative">
+    <>
+      <StructuredData />
+      <main className="min-h-screen bg-black flex flex-col items-center relative">
       {/* Language Switcher - Fixed top right */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSwitcher />
@@ -46,5 +49,6 @@ export default function HacksPage() {
       {/* Bottom padding to prevent button overlap */}
       <div className="h-32 bg-black"></div>
     </main>
+    </>
   );
 }
