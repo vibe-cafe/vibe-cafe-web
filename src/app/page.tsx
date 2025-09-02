@@ -272,7 +272,7 @@ export default function Home() {
         return (
           <div className="w-full h-full flex flex-col items-center justify-center p-2">
             <div className="w-full">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col items-center">
                 {/* Vibe Friends Section */}
                 <div className="text-center">
                   {/* Vibe Friends Logo */}
@@ -286,7 +286,7 @@ export default function Home() {
                       priority
                     />
                   </div>
-                  
+
                   {/* Vibe Friends QR Code */}
                   <div className="mb-4">
                     <Image 
@@ -298,41 +298,14 @@ export default function Home() {
                       priority
                     />
                   </div>
-                </div>
-
-                {/* Vibe Maker Section */}
-                <div className="text-center">
-                  {/* Vibe Maker Logo */}
-                  <div className="mb-4">
-                    <Image 
-                      src="/images/vibe-maker.png" 
-                      alt="Vibe Maker Logo" 
-                      width={300} 
-                      height={150}
-                      className="mx-auto w-full max-w-[150px]"
-                      priority
-                    />
-                  </div>
-                  
-                  {/* Vibe Maker QR Code */}
-                  <div className="mb-4">
-                    <Image 
-                      src="/images/vibe-maker-qr.jpg" 
-                      alt="Vibe Maker QR Code" 
-                      width={150} 
-                      height={150}
-                      className="mx-auto rounded w-full max-w-[100px]"
-                      priority
-                    />
-                  </div>
-                  
-                  {/* 小红书 Link */}
-                  <button
-                    onClick={() => window.open('https://www.xiaohongshu.com/user/profile/652b967a000000002a037e4d', '_blank')}
-                    className="mx-auto block cursor-pointer text-sm"
+                  <a
+                    href="https://www.xiaohongshu.com/user/profile/618d0fd10000000021021ca9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`mx-auto block cursor-pointer text-sm hover:underline ${desktopStyle === 'claude' ? 'text-[#DE7356]' : 'text-black'}`}
                   >
                     小红书
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
