@@ -37,6 +37,14 @@ i18n
             title: 'Subscribe: VibeFriends',
             button: 'WeChat Official: VibeFriends',
           },
+          hacks: {
+            applyButton: 'Apply Now',
+            seo: {
+              title: 'Vibe Hacks #01 - 24-Hour AI Coding Hackathon | VibeFriends × SegmentFault',
+              description: 'Join the 24-hour Vibe Coding hackathon co-hosted by VibeFriends and SegmentFault. 33 teams compete for real user votes and prizes worth tens of thousands. Theme: Optimize Vibe Coding with Vibe Coding. Beijing, September 13, 2025.',
+              keywords: 'Vibe Hacks, hackathon, AI coding, Vibe Coding, VibeFriends, SegmentFault, coding competition, Beijing, 24-hour, AI development',
+            },
+          },
         },
       },
       zh: {
@@ -66,6 +74,14 @@ i18n
           contact: {
             title: '关注我们：VibeFriends',
             button: '微信公众号：VibeFriends',
+          },
+          hacks: {
+            applyButton: '立刻报名',
+            seo: {
+              title: 'Vibe Hacks #01 - 24小时 AI 编程黑客松 | VibeFriends × SegmentFault',
+              description: 'VibeFriends 和 SegmentFault 联合主办的 24 小时 Vibe Coding 黑客松。33 组参赛者，真实用户投票，数万元奖金等你来拿！主题：用 Vibe Coding 优化 Vibe Coding。地点：北京，时间：2025年9月13日。',
+              keywords: 'Vibe Hacks, 黑客松, AI编程, Vibe Coding, VibeFriends, SegmentFault, 编程比赛, 北京, 24小时, AI开发',
+            },
           },
         },
       },
