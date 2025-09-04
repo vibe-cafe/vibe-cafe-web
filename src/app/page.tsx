@@ -96,7 +96,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, updateWindowPosition]);
+  }, [viewportWidth, viewportHeight, updateWindowPosition, windows]);
 
   // Close menu when clicking outside
   useEffect(() => {

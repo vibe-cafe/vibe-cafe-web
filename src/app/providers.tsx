@@ -10,7 +10,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const handleLangChange = (lng: string) => {
       try {
         document.cookie = `language=${lng}; path=/; max-age=${60 * 60 * 24 * 365}`;
-      } catch (e) {
+      } catch {
         // noop
       }
     };
