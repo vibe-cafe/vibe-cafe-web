@@ -57,10 +57,10 @@ export default function FileIcon({
 
     switch (desktopStyle) {
       case 'windows':
-        baseStyle += ' font-[\'MS_Sans_Serif\']';
+        baseStyle += ' font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif]';
         break;
       case 'linux':
-        baseStyle += ' font-[\'Liberation_Sans\']';
+        baseStyle += ' font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif]';
         break;
       case 'claude':
         baseStyle += ' font-mono';

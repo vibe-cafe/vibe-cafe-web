@@ -12,9 +12,9 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
   const getTextareaStyle = () => {
     switch (desktopStyle) {
       case 'windows':
-        return 'bg-[#C0C0C0] font-[\'MS_Sans_Serif\'] text-sm';
+        return 'bg-[#C0C0C0] font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif] text-sm';
       case 'linux':
-        return 'bg-[#FFFFFF] font-[\'Liberation_Sans\'] text-sm';
+        return 'bg-[#FFFFFF] font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif] text-sm';
       case 'claude':
         return 'bg-black text-white font-mono text-sm';
       default:
@@ -38,9 +38,9 @@ export default function NoteWindow({ desktopStyle = 'mac' }: NoteWindowProps) {
   const getButtonStyle = () => {
     switch (desktopStyle) {
       case 'windows':
-        return 'px-4 py-1 border-2 border-[#808080] bg-[#C0C0C0] active:border-[#404040] text-sm font-[\'MS_Sans_Serif\'] shadow-[1px_1px_0px_0px_#FFFFFF,_-1px_-1px_0px_0px_#808080] cursor-pointer';
+        return 'px-4 py-1 border-2 border-[#808080] bg-[#C0C0C0] active:border-[#404040] text-sm font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif] shadow-[1px_1px_0px_0px_#FFFFFF,_-1px_-1px_0px_0px_#808080] cursor-pointer';
       case 'linux':
-        return 'px-3 py-1 bg-gradient-to-b from-[#F0F0F0] to-[#E3E3E3] border border-[#B5B5B5] rounded text-sm font-[\'Liberation_Sans\'] hover:from-[#E3E3E3] hover:to-[#D6D6D6] active:from-[#D6D6D6] active:to-[#D6D6D6] cursor-pointer';
+        return 'px-3 py-1 bg-gradient-to-b from-[#F0F0F0] to-[#E3E3E3] border border-[#B5B5B5] rounded text-sm font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif] hover:from-[#E3E3E3] hover:to-[#D6D6D6] active:from-[#D6D6D6] active:to-[#D6D6D6] cursor-pointer';
       case 'claude':
         return 'px-3 py-1 bg-black text-white border border-gray-400 rounded-none text-sm font-mono hover:bg-white hover:text-black cursor-pointer';
       default:

@@ -77,7 +77,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
           Start
         </button>
         {/* Menus */}
-        <div className="flex items-center gap-4 text-xs font-[MS_Sans_Serif]">
+        <div className="flex items-center gap-4 text-xs font-['MS Sans Serif', 'Segoe UI', sans-serif]">
           {/* VibeCafé Menu with Dropdown */}
           <div className="relative menu-item">
             <button
@@ -167,7 +167,7 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
           </button>
         </div>
         {/* Time */}
-        <div className="ml-auto text-xs text-black font-[MS_Sans_Serif]">
+        <div className="ml-auto text-xs text-black font-['MS Sans Serif', 'Segoe UI', sans-serif]">
           {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
@@ -184,9 +184,9 @@ export default function MenuBar({ desktopStyle, onChangeDesktopStyle }: {
         : 'bg-white border-b border-black'
     }`}>
       <div className={`flex items-center gap-4 text-xs relative ${
-        desktopStyle === 'linux' ? 'font-[Liberation_Sans]' : 
+        desktopStyle === 'linux' ? 'font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif]' : 
         desktopStyle === 'claude' ? 'font-mono' : 
-        'font-chicago'
+        'font-[\'Chicago\', \'Helvetica\', sans-serif]'
       }`}>
         {/* OS Menu Icon */}
         <div className="flex items-center">

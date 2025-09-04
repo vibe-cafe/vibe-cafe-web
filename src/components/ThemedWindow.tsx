@@ -34,7 +34,7 @@ export default function ThemedWindow({
   if (isMobile) {
     if (desktopStyle === 'windows') {
       return (
-        <div className={`bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col font-[MS_Sans_Serif] ${className}`}>
+        <div className={`bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full flex flex-col font-['MS Sans Serif', 'Segoe UI', sans-serif] ${className}`}>
           {/* Windows Title Bar */}
           <div className="h-7 bg-[#000080] border-b-2 border-[#fff] flex items-center px-2 select-none">
             <div className="flex-1 text-left text-white text-xs font-bold tracking-wide">
@@ -122,14 +122,14 @@ export default function ThemedWindow({
 
   switch (desktopStyle) {
     case 'windows':
-      baseClasses += ' bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-[MS_Sans_Serif]';
+      baseClasses += ' bg-[#C0C0C0] border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif]';
       titleBarClasses += ' bg-[#000080] border-b-2 border-[#fff]';
       titleTextClasses += ' text-white text-xs';
       closeButtonClasses += ' w-5 h-5 bg-[#C0C0C0] border-2 border-[#000] text-[#000] text-lg hover:bg-[#ff0000] hover:text-white';
       contentClasses += ' p-4';
       break;
     case 'linux':
-      baseClasses += ' bg-[#DFDFDF] border border-[#6A6A6A] rounded shadow-md font-[Liberation_Sans]';
+      baseClasses += ' bg-[#DFDFDF] border border-[#6A6A6A] rounded shadow-md font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif]';
       titleBarClasses += ' bg-gradient-to-b from-[#7A7A7A] to-[#6A6A6A] border-b border-[#5A5A5A] rounded-t';
       titleTextClasses += ' text-white text-sm';
       closeButtonClasses += ' w-5 h-5 bg-gradient-to-b from-[#E07070] to-[#C05050] border border-[#A04040] text-white text-xs rounded hover:from-[#F08080] hover:to-[#D06060]';

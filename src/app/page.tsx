@@ -67,22 +67,26 @@ const INITIAL_WINDOWS = WINDOWS_CONFIG.map((window, index) => ({
 }));
 
 export default function Home() {
-  const [hydrated, setHydrated] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
   const { windows, toggleWindow, closeWindow, focusWindow, updateWindowPosition } = useWindowManager(INITIAL_WINDOWS);
   const { isMobile, width: viewportWidth, height: viewportHeight } = useWindowSize();
-  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux' | 'claude'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux' | 'claude') || 'mac';
+  const [desktopStyle, setDesktopStyle] = useState<'mac' | 'windows' | 'linux' | 'claude'>('mac');
+  const [isClient, setIsClient] = useState(false);
+
+  // Initialize desktop style from localStorage after hydration
+  useEffect(() => {
+    setIsClient(true);
+    const savedStyle = localStorage.getItem('desktopStyle') as 'mac' | 'windows' | 'linux' | 'claude';
+    if (savedStyle) {
+      setDesktopStyle(savedStyle);
     }
-    return 'mac';
-  });
+  }, []);
 
   // Update window positions when viewport changes
   useEffect(() => {
-    if (!hydrated) return;
-
+    if (viewportWidth === 0 || viewportHeight === 0) return; // Skip if viewport not ready
+    
     const openWindows = windows.filter(w => w.isOpen);
     openWindows.forEach((window, index) => {
       const newPosition = calculateInitialPosition(
@@ -92,11 +96,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, hydrated, updateWindowPosition]);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  }, [viewportWidth, viewportHeight, updateWindowPosition]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -124,18 +124,16 @@ export default function Home() {
   }, [i18n]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isClient) {
       localStorage.setItem('desktopStyle', desktopStyle);
     }
-  }, [desktopStyle]);
+  }, [desktopStyle, isClient]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isClient) {
       localStorage.setItem('language', i18n.language);
     }
-  }, [i18n.language]);
-
-  if (!hydrated) return null;
+  }, [i18n.language, isClient]);
 
   const fileIcons = [
     {
@@ -177,13 +175,13 @@ export default function Home() {
   const getMainStyle = () => {
     switch (desktopStyle) {
       case 'windows':
-        return 'font-[\'MS_Sans_Serif\']';
+        return 'font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif]';
       case 'linux':
-        return 'font-[\'Liberation_Sans\']';
+        return 'font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif]';
       case 'claude':
         return 'font-mono';
       default: // mac
-        return 'font-chicago';
+        return 'font-[\'Chicago\', \'Helvetica\', sans-serif]';
     }
   };
   
@@ -203,9 +201,9 @@ export default function Home() {
   const getWindowStyle = (style: 'mac' | 'windows' | 'linux' | 'claude') => {
     switch (style) {
       case 'windows':
-        return 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']';
+        return 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif]';
       case 'linux':
-        return 'border border-[#6A6A6A] rounded shadow-md bg-[#DFDFDF] font-[\'Liberation_Sans\']';
+        return 'border border-[#6A6A6A] rounded shadow-md bg-[#DFDFDF] font-[\'Liberation Sans\', \'DejaVu Sans\', sans-serif]';
       case 'claude':
         return 'border border-gray-400 rounded-none shadow-none bg-black font-mono';
       default: // mac
@@ -644,7 +642,7 @@ export default function Home() {
                 key={window.id}
                 title={window.title}
                 onClose={() => closeWindow(window.id)}
-                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS_Sans_Serif\']' : desktopStyle === 'claude' ? 'bg-black border border-gray-400 rounded-none shadow-none font-mono' : 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}
+                className={desktopStyle === 'windows' ? 'border-[2.5px] border-[#000] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#C0C0C0] font-[\'MS Sans Serif\', \'Segoe UI\', sans-serif]' : desktopStyle === 'claude' ? 'bg-black border border-gray-400 rounded-none shadow-none font-mono' : 'bg-white border border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}
                 isMobile={isMobile}
                 desktopStyle={desktopStyle} // Pass the actual theme instead of defaulting to Mac
               >
