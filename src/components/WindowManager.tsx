@@ -300,15 +300,20 @@ export const useWindowManager = (initialWindows: Window[]) => {
   }, [getMaxZIndex]);
 
   const updateWindowPosition = useCallback((id: string, newX: number, newY: number) => {
-    setWindows((prev) => 
-      prev.map((w) => 
-        w.id === id ? {
+    setWindows((prev) => {
+      let didChange = false;
+      const next = prev.map((w) => {
+        if (w.id !== id) return w;
+        if (w.position.x === newX && w.position.y === newY) return w;
+        didChange = true;
+        return {
           ...w,
           position: { x: newX, y: newY },
           lastPosition: { x: newX, y: newY }
-        } : w
-      )
-    );
+        };
+      });
+      return didChange ? next : prev;
+    });
   }, []);
 
   useEffect(() => {

@@ -86,7 +86,7 @@ export default function Home() {
   // Update window positions when viewport changes
   useEffect(() => {
     if (viewportWidth === 0 || viewportHeight === 0) return; // Skip if viewport not ready
-    
+
     const openWindows = windows.filter(w => w.isOpen);
     openWindows.forEach((window, index) => {
       const newPosition = calculateInitialPosition(
@@ -96,7 +96,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, updateWindowPosition, windows]);
+  }, [viewportWidth, viewportHeight, updateWindowPosition]);
 
   // Close menu when clicking outside
   useEffect(() => {
