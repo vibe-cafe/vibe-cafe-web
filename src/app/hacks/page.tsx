@@ -37,20 +37,12 @@ export default function HacksPage() {
 
       {/* Registration Buttons - Fixed to bottom of viewport */}
       <div className="fixed bottom-8 left-4 right-4 z-50 mx-auto max-w-md">
-        <div className={`flex ${i18n.language.startsWith('zh') ? 'flex-row' : 'flex-col'} gap-3`}>
-          <button
-            onClick={() => window.open('https://cvji2p7f0zb.feishu.cn/share/base/form/shrcny72hVeWJTsOh6q5uKOSaJf', '_blank')}
-            className="bg-black text-white border-2 border-white w-full px-6 py-3 text-base md:px-8 md:py-4 md:text-lg font-bold rounded-lg hover:bg-gray-800 hover:cursor-pointer transition-colors duration-200 shadow-lg hover:shadow-xl"
-          >
-            {t('hacks.participantApplyButton')}
-          </button>
-          <button
-            onClick={() => window.open('https://cvji2p7f0zb.feishu.cn/share/base/form/shrcnYQ4PlKEQ2acj5XghOJ6z2c', '_blank')}
-            className="bg-black text-white border-2 border-white w-full px-6 py-3 text-base md:px-8 md:py-4 md:text-lg font-bold rounded-lg hover:bg-gray-800 hover:cursor-pointer transition-colors duration-200 shadow-lg hover:shadow-xl"
-          >
-            {t('hacks.audienceApplyButton')}
-          </button>
-        </div>
+        <button
+          onClick={() => window.open('https://cvji2p7f0zb.feishu.cn/share/base/form/shrcnYQ4PlKEQ2acj5XghOJ6z2c', '_blank')}
+          className="bg-black text-white border-2 border-white w-full px-4 py-2 text-sm md:px-6 md:py-3 md:text-base font-bold rounded-lg hover:bg-gray-800 hover:cursor-pointer transition-colors duration-200 shadow-lg hover:shadow-xl"
+        >
+          {t('hacks.audienceApplyButton')}
+        </button>
       </div>
 
       {/* Bottom padding to prevent button overlap */}

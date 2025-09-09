@@ -38,7 +38,6 @@ i18n
             button: 'WeChat Official: VibeFriends',
           },
           hacks: {
-            participantApplyButton: 'Apply for Competition',
             audienceApplyButton: 'Audience Registration',
             seo: {
               title: 'Vibe Hacks #01 - 24-Hour AI Coding Hackathon | VibeFriends × SegmentFault',
@@ -77,7 +76,6 @@ i18n
             button: '微信公众号：VibeFriends',
           },
           hacks: {
-            participantApplyButton: '报名参赛',
             audienceApplyButton: '观众报名',
             seo: {
               title: 'Vibe Hacks #01 - 24小时 AI 编程黑客松 | VibeFriends × SegmentFault',
