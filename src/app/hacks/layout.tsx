@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import ClientSEO from './ClientSEO';
 
 export const metadata: Metadata = {
   title: 'Vibe Hacks #01 - 24小时 AI 编程黑客松 | VibeFriends × SegmentFault',
@@ -21,7 +19,7 @@ export const metadata: Metadata = {
   alternates: {
     languages: {
       'zh': '/hacks',
-      'en': '/hacks',
+      'en': '/hacks', 
     },
   },
 };
@@ -33,9 +31,6 @@ export default function HacksLayout({
 }) {
   return (
     <>
-      <Suspense fallback={null}>
-        <ClientSEO />
-      </Suspense>
       {children}
     </>
   );
