@@ -78,12 +78,22 @@ export default function HacksPage() {
                 <a className="hover:underline text-zinc-200" href="https://segmentfault.com" target="_blank" rel="noopener noreferrer">SegmentFault</a>
               </span>
             </span>
+            <span className="inline-flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700">收官</span>
+              <a
+                className="hover:underline text-zinc-200"
+                href="https://mp.weixin.qq.com/s/8jDOECibRvPN6-KUomCHHA"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                了解完整比赛
+              </a>
+            </span>
           </div>
           <hr className="mt-6 border-zinc-800" />
         </header>
 
         <section aria-label="项目列表">
-          <div className="mb-4 text-sm text-zinc-400">共 {projects.length} 个项目</div>
           <ProjectWall projects={projects} />
         </section>
       </div>

@@ -16,9 +16,22 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
   const [items, setItems] = useState<Project[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [enlargedSrc, setEnlargedSrc] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const onCardClick = (index: number) => setActiveIndex(index);
   const onClose = () => setActiveIndex(null);
+
+  // Filter items based on search query
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return items;
+    
+    const query = searchQuery.toLowerCase().trim();
+    return items.filter((project) => {
+      const title = project.title.toLowerCase();
+      const description = project.descriptionHtml.replace(/<[^>]*>/g, '').toLowerCase(); // Strip HTML tags
+      return title.includes(query) || description.includes(query);
+    });
+  }, [items, searchQuery]);
 
   const bodyScrollLock = useMemo(() => {
     if (typeof document === 'undefined') return { lock: () => {}, unlock: () => {} };
@@ -44,10 +57,50 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
     setItems(arr);
   }, [projects]);
 
+  // Handle ESC key to close project window (only when lightbox is not open)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && activeIndex !== null && enlargedSrc === null) {
+        bodyScrollLock.unlock();
+        onClose();
+      }
+    };
+
+    if (activeIndex !== null) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [activeIndex, enlargedSrc, bodyScrollLock, onClose]);
+
   return (
     <>
+      {/* Search input - positioned next to project count */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="text-sm text-zinc-400">
+          {searchQuery ? `找到 ${filteredItems.length} 个项目` : `共 ${items.length} 个项目（随机排序）`}
+        </div>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="搜索..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-48 px-3 py-1.5 text-sm bg-zinc-900 border border-zinc-700 rounded text-white placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-sm"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((p, i) => (
+        {filteredItems.map((p, i) => (
           <button
             key={p.id}
             onClick={() => {
@@ -75,7 +128,7 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
         ))}
       </div>
 
-      {activeIndex !== null && items[activeIndex] && (
+      {activeIndex !== null && filteredItems[activeIndex] && (
         <div
           className="fixed inset-0 z-50"
           onClick={() => {
@@ -102,14 +155,14 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
                 </button>
               </div>
               <div className="px-5 pb-5 overflow-y-auto max-h-[75vh]">
-                {items[activeIndex].imageDataUrls?.length > 0 && (
+                {filteredItems[activeIndex].imageDataUrls?.length > 0 && (
                   <div className="mb-5 -mx-5 px-5">
                     <div className="flex gap-3 overflow-x-auto no-scrollbar">
-                      {items[activeIndex].imageDataUrls.map((src, idx) => (
+                      {filteredItems[activeIndex].imageDataUrls.map((src, idx) => (
                         <img
                           key={idx}
                           src={src}
-                          alt={items[activeIndex].title}
+                          alt={filteredItems[activeIndex].title}
                           className="h-32 w-auto object-cover rounded border border-zinc-800 cursor-pointer"
                           onClick={() => setEnlargedSrc(src)}
                         />
@@ -117,20 +170,20 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
                     </div>
                   </div>
                 )}
-                <h3 className="text-2xl font-semibold mb-1">{items[activeIndex].title}</h3>
-                {items[activeIndex].teamName && (
-                  <p className="text-sm text-gray-400 mb-4">团队：{items[activeIndex].teamName}</p>
+                <h3 className="text-2xl font-semibold mb-1">{filteredItems[activeIndex].title}</h3>
+                {filteredItems[activeIndex].teamName && (
+                  <p className="text-sm text-gray-400 mb-4">团队：{filteredItems[activeIndex].teamName}</p>
                 )}
                 <div
                   className="md-content md-content-invert max-w-none text-base leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: items[activeIndex].descriptionHtml }}
+                  dangerouslySetInnerHTML={{ __html: filteredItems[activeIndex].descriptionHtml }}
                 />
               </div>
-              {(items[activeIndex].githubUrl || items[activeIndex].xhsUrl) && (
+              {(filteredItems[activeIndex].githubUrl || filteredItems[activeIndex].xhsUrl) && (
                 <div className="flex items-center gap-4 p-5 border-t border-zinc-800">
-                  {items[activeIndex].githubUrl && (
+                  {filteredItems[activeIndex].githubUrl && (
                     <a
-                      href={items[activeIndex].githubUrl}
+                      href={filteredItems[activeIndex].githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-400 hover:underline"
@@ -138,9 +191,9 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
                       GitHub
                     </a>
                   )}
-                  {items[activeIndex].xhsUrl && (
+                  {filteredItems[activeIndex].xhsUrl && (
                     <a
-                      href={items[activeIndex].xhsUrl}
+                      href={filteredItems[activeIndex].xhsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-pink-300 hover:underline"
@@ -158,7 +211,7 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
               onClick={(e) => {
                 e.stopPropagation();
                 if (activeIndex === null) return;
-                setActiveIndex((activeIndex - 1 + items.length) % items.length);
+                setActiveIndex((activeIndex - 1 + filteredItems.length) % filteredItems.length);
               }}
             >
               <span className="text-xl">‹</span>
@@ -169,7 +222,7 @@ export default function ProjectWall({ projects }: { projects: Project[] }) {
               onClick={(e) => {
                 e.stopPropagation();
                 if (activeIndex === null) return;
-                setActiveIndex((activeIndex + 1) % items.length);
+                setActiveIndex((activeIndex + 1) % filteredItems.length);
               }}
             >
               <span className="text-xl">›</span>
