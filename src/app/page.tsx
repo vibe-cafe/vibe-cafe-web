@@ -55,6 +55,13 @@ const WINDOWS_CONFIG = [
     isOpen: false,
     zIndex: 6,
     size: { width: 600, height: 400 }
+  },
+  {
+    id: 'places',
+    title: 'Places.app',
+    isOpen: false,
+    zIndex: 7,
+    size: { width: 600, height: 500 }
   }
 ];
 
@@ -169,6 +176,12 @@ export default function Home() {
       name: 'design.figma',
       type: 'app' as const,
       icon: '🧑‍🎨',
+    },
+    {
+      id: 'places',
+      name: 'Places.app',
+      type: 'app' as const,
+      icon: '📍',
     },
   ];
 
@@ -328,6 +341,16 @@ export default function Home() {
               className="w-full h-[500px] rounded border"
               src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/design/wvQLFXP3FkVe4LtOOoNnD6/VibeCaf%C3%A9?node-id=0-1"
               allowFullScreen
+            />
+          </div>
+        );
+      case 'places':
+        return (
+          <div className="w-full h-full relative">
+            <iframe
+              src="/places"
+              className="w-full h-full border-0"
+              title="Places"
             />
           </div>
         );
