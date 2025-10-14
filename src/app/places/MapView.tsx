@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type Place = {
   id: string;
@@ -22,7 +23,7 @@ interface MapViewProps {
 
 export default function MapView({ places, userLocation }: MapViewProps) {
   const [isClient, setIsClient] = useState(false);
-  const [MapComponent, setMapComponent] = useState<any>(null);
+  const [MapComponent, setMapComponent] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -145,7 +146,7 @@ export default function MapView({ places, userLocation }: MapViewProps) {
                   const bounds = L.default.latLngBounds(boundsPoints);
                   map.fitBounds(bounds, { padding: [20, 20] });
                 }
-              }, [map, validPlaces, userLocation]);
+              }, [map]);
               
               return null;
             };
@@ -228,14 +229,16 @@ export default function MapView({ places, userLocation }: MapViewProps) {
                           {/* Image */}
                           {place.image && (
                             <div className="mb-3">
-                              <img
-                                src={`/images/places/${place.image}`}
-                                alt={place.title}
-                                className="w-full h-32 object-cover rounded-lg"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = 'none';
-                                }}
-                              />
+                               <Image
+                                 src={`/images/places/${place.image}`}
+                                 alt={place.title}
+                                 width={256}
+                                 height={128}
+                                 className="w-full h-32 object-cover rounded-lg"
+                                 onError={(e) => {
+                                   (e.target as HTMLImageElement).style.display = 'none';
+                                 }}
+                               />
                             </div>
                           )}
                           
