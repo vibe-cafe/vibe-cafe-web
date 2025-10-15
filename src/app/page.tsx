@@ -19,48 +19,41 @@ const WINDOWS_CONFIG = [
     title: 'About.txt',
     isOpen: true,
     zIndex: 1,
-    size: { width: 400, height: 300 }
-  },
-  { 
-    id: 'manifesto',
-    title: 'Manifesto.txt',
-    isOpen: true,
-    zIndex: 2,
-    size: { width: 400, height: 350 }
+    size: { width: 400, height: 500 }
   },
   { 
     id: 'friends',
     title: 'Friends.app',
     isOpen: true,
-    zIndex: 3,
+    zIndex: 2,
     size: { width: 400, height: 300 }
   },
   {
     id: 'places',
     title: 'Places.app',
     isOpen: false,
-    zIndex: 4,
+    zIndex: 3,
     size: { width: 600, height: 500 }
   },
   { 
     id: 'hacks',
     title: 'Hacks.app',
     isOpen: false,
-    zIndex: 5,
+    zIndex: 4,
     size: { width: 500, height: 600 }
   },
   {
     id: 'code',
     title: 'code.mov',
     isOpen: false,
-    zIndex: 6,
+    zIndex: 5,
     size: { width: 400, height: 400 }
   },
   {
     id: 'design',
     title: 'design.figma',
     isOpen: false,
-    zIndex: 7,
+    zIndex: 6,
     size: { width: 600, height: 400 }
   }
 ];
@@ -149,11 +142,6 @@ export default function Home() {
       type: 'txt' as const,
     },
     {
-      id: 'manifesto',
-      name: 'Manifesto.txt',
-      type: 'txt' as const,
-    },
-    {
       id: 'friends',
       name: 'Friends.app',
       type: 'app' as const,
@@ -228,45 +216,33 @@ export default function Home() {
     switch (windowId) {
       case 'about':
         return (
-                      <div className={`flex flex-col items-center gap-6 p-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
-            <div className="flex items-center justify-center">
-              <Image
-                src="/images/vibe-cafe.png"
-                alt="Vibe Cafe Logo"
-                width={240}
-                height={160}
-                className="w-auto h-auto max-w-[240px] max-h-[160px] object-contain"
-                priority
-              />
-            </div>
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center gap-2">
+          <div className={`flex flex-col gap-6 p-4 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
+            {/* Logo and Title Section */}
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center justify-center">
+                <Image
+                  src="/images/vibe-cafe.png"
+                  alt="Vibe Cafe Logo"
+                  width={240}
+                  height={160}
+                  className="w-auto h-auto max-w-[240px] max-h-[160px] object-contain"
+                  priority
+                />
+              </div>
+              <div className="text-center space-y-3">
                 <h1 className={`text-2xl font-bold ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('hero.title')}</h1>
-                <span className={`text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>|</span>
-                <p className={`text-sm italic ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('hero.subtitle')}</p>
+                <p className={`leading-relaxed ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-600'}`}>{t('hero.tagline')}</p>
               </div>
-              <p className={`text-sm leading-relaxed ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-600'}`}>{t('hero.description')}</p>
             </div>
-          </div>
-        );
-      case 'manifesto':
-        return (
-                      <div className={`space-y-5 text-sm p-5 ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
-            <div className="space-y-3">
-                              <h3 className={`font-bold text-sm leading-tight ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('manifesto.vision')}</h3>
-                <h3 className={`font-bold text-sm leading-tight ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>{t('manifesto.mission')}</h3>
-            </div>
-                          <div className={`space-y-4 pt-3 border-t ${desktopStyle === 'claude' ? 'border-white' : 'border-gray-200'}`}>
-                <div className="space-y-1">
-                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text1')}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text2')}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className={`leading-relaxed text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-gray-800'}`}>{t('manifesto.text3')}</p>
-                </div>
+
+            {/* Manifesto Section */}
+            <div className={`space-y-5 text-sm ${desktopStyle === 'claude' ? 'text-white' : 'text-black'}`}>
+              <div className="space-y-3">
+                <p>{t('manifesto.vision')}</p>
+                <p>{t('manifesto.mission')}</p>
+                <p>{t('manifesto.belief')}</p>
               </div>
+            </div>
           </div>
         );
       case 'hacks':
@@ -564,15 +540,6 @@ export default function Home() {
                 </button>
                 {activeMenu === 'vibeCafe' && (
                   <div className="absolute left-0 mt-1 bg-black border border-[#DE7356] px-2 py-1 z-50 min-w-[140px]">
-                    <button
-                      onClick={() => {
-                        window.dispatchEvent(new CustomEvent('openNewWindow'));
-                        setActiveMenu(null);
-                      }}
-                      className="block w-full text-left px-2 py-1 hover:bg-[#DE7356] hover:text-black"
-                    >
-                      New
-                    </button>
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
