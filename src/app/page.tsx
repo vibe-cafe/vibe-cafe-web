@@ -19,7 +19,7 @@ const WINDOWS_CONFIG = [
     title: 'About.txt',
     isOpen: true,
     zIndex: 1,
-    size: { width: 400, height: 500 }
+    size: { width: 400, height: 450 }
   },
   { 
     id: 'friends',
