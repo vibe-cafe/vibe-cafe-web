@@ -29,39 +29,39 @@ const WINDOWS_CONFIG = [
     size: { width: 400, height: 350 }
   },
   { 
-    id: 'hacks',
-    title: 'Hacks.app',
-    isOpen: false,
-    zIndex: 3,
-    size: { width: 500, height: 600 }
-  },
-  { 
     id: 'friends',
     title: 'Friends.app',
     isOpen: true,
-    zIndex: 4,
+    zIndex: 3,
     size: { width: 400, height: 300 }
+  },
+  {
+    id: 'places',
+    title: 'Places.app',
+    isOpen: false,
+    zIndex: 4,
+    size: { width: 600, height: 500 }
+  },
+  { 
+    id: 'hacks',
+    title: 'Hacks.app',
+    isOpen: false,
+    zIndex: 5,
+    size: { width: 500, height: 600 }
   },
   {
     id: 'code',
     title: 'code.mov',
     isOpen: false,
-    zIndex: 5,
+    zIndex: 6,
     size: { width: 400, height: 400 }
   },
   {
     id: 'design',
     title: 'design.figma',
     isOpen: false,
-    zIndex: 6,
-    size: { width: 600, height: 400 }
-  },
-  {
-    id: 'places',
-    title: 'Places.app',
-    isOpen: false,
     zIndex: 7,
-    size: { width: 600, height: 500 }
+    size: { width: 600, height: 400 }
   }
 ];
 
@@ -154,16 +154,22 @@ export default function Home() {
       type: 'txt' as const,
     },
     {
-      id: 'hacks',
-      name: 'Hacks.app',
-      type: 'app' as const,
-      icon: '🚀',
-    },
-    {
       id: 'friends',
       name: 'Friends.app',
       type: 'app' as const,
       icon: '👥',
+    },
+    {
+      id: 'places',
+      name: 'Places.app',
+      type: 'app' as const,
+      icon: '📍',
+    },
+    {
+      id: 'hacks',
+      name: 'Hacks.app',
+      type: 'app' as const,
+      icon: '🚀',
     },
     {
       id: 'code',
@@ -176,12 +182,6 @@ export default function Home() {
       name: 'design.figma',
       type: 'app' as const,
       icon: '🧑‍🎨',
-    },
-    {
-      id: 'places',
-      name: 'Places.app',
-      type: 'app' as const,
-      icon: '📍',
     },
   ];
 
