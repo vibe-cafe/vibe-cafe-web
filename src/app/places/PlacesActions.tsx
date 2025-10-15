@@ -62,7 +62,7 @@ export default function PlacesActions() {
       {/* Contribute Button */}
       <button
         onClick={() => {
-          window.open('https://github.com/vibe-cafe/vibe-places-data', '_blank');
+          window.open('https://github.com/vibe-cafe/vibe-places-data/issues/new?template=new-place.yml', '_blank');
         }}
         className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded transition-colors cursor-pointer"
       >
