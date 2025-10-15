@@ -1,0 +1,9 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "installCommand": "git submodule update --init --recursive && npm install"
+}
+
