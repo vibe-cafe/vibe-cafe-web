@@ -1,0 +1,3 @@
+[submodule "data/places-data"]
+	path = data/places-data
+	url = https://github.com/vibe-cafe/vibe-places-data.git

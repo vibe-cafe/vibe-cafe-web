@@ -26,7 +26,8 @@ export const metadata = {
 
 function loadPlaces(): Place[] {
   const root = process.cwd();
-  const jsonPath = path.resolve(root, 'data', 'places.json');
+  // 从 submodule 读取数据
+  const jsonPath = path.resolve(root, 'data', 'places-data', 'data', 'places.json');
   if (fs.existsSync(jsonPath)) {
     const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf-8')) as Place[];
     return raw.sort((a, b) => a.title.localeCompare(b.title, 'zh-CN'));
