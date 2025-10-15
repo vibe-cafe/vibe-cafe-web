@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: "VibeCafé - Keep the Vibe",
+  title: "VibeCafé - Keep creating, keep the Vibe",
   description: "A community of Vibe Creators - where innovation meets inspiration",
   icons: {
     icon: '/favicon.svg',
