@@ -1,32 +1,31 @@
 # VibeCafé Web
 
-A unique digital space built with Next.js 15, TypeScript, and Tailwind CSS.
+[VibeCafé](https://vibecafe.ai) Website
+[VibeCafé](https://vibecafe.ai) 官方网站
 
 ## Getting Started
 
 ```bash
+# Clone with submodule
+git clone --recurse-submodules <repo-url>
+
+# Or initialize submodule after clone
+git submodule init
+git submodule update
+
+# Install and run
 npm install
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-## Setup vibe-places-data submodule
-
-After pushing vibe-places-data to GitHub:
-
-```bash
-# Remove temporary copy
-rm -rf data/places-data
-
-# Add as real submodule
-git submodule add https://github.com/vibe-cafe/vibe-places-data.git data/places-data
-git commit -m "Add vibe-places-data as submodule"
-```
-
 ## Update Places Data
 
+Places data comes from [vibe-places-data](https://github.com/vibe-cafe/vibe-places-data) submodule.
+
 ```bash
+# Update to latest
 git submodule update --remote data/places-data
 git add data/places-data
 git commit -m "Update places data"
