@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "git submodule update --init --recursive && next build",
+    "build": "git submodule update --init --recursive && npm run copy-images && next build",
+    "copy-images": "rm -rf public/images/places && cp -r data/places-data/images public/images/places",
     "start": "next start",
     "lint": "next lint"
   },
