@@ -90,7 +90,7 @@ export default function Home() {
     }
   }, []);
 
-  // Update window positions when viewport changes
+  // Update window positions when viewport changes (but not when windows change)
   useEffect(() => {
     if (viewportWidth === 0 || viewportHeight === 0) return; // Skip if viewport not ready
 
@@ -103,7 +103,7 @@ export default function Home() {
       );
       updateWindowPosition(window.id, newPosition.x, newPosition.y);
     });
-  }, [viewportWidth, viewportHeight, updateWindowPosition, windows]);
+  }, [viewportWidth, viewportHeight, updateWindowPosition]); // Removed 'windows' from dependencies
 
   // Close menu when clicking outside
   useEffect(() => {

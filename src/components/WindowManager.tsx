@@ -93,6 +93,7 @@ export function ManagedWindow({
 }: WindowManagerProps) {
   const [size, setSize] = useState(() => initialSize || { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });
   const [isResizing, setIsResizing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [startSize, setStartSize] = useState({ width: 0, height: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
@@ -101,9 +102,12 @@ export function ManagedWindow({
   const y = useMotionValue(position.y);
 
   useEffect(() => {
-    x.set(position.x);
-    y.set(position.y);
-  }, [position.x, position.y, x, y]);
+    // Only update motion values if we're not currently dragging
+    if (!isDragging) {
+      x.set(position.x);
+      y.set(position.y);
+    }
+  }, [position.x, position.y, x, y, isDragging]);
 
   useEffect(() => {
     if (!isResizing) return;
@@ -142,8 +146,13 @@ export function ManagedWindow({
     setIsResizing(true);
   };
 
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
   const handleDragEnd = () => {
     const newPosition = { x: x.get(), y: y.get() };
+    setIsDragging(false);
     if (typeof window !== 'undefined') {
       const windowEvent = new CustomEvent('windowPositionChange', {
         detail: { id, position: newPosition }
@@ -168,6 +177,7 @@ export function ManagedWindow({
         position: 'absolute',
       }}
       onMouseDown={() => !isResizing && onFocus()}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       className="touch-none"
     >
