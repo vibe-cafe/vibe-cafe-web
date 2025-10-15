@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import BackButton from '@/components/BackButton';
 import PlacesList from './PlacesList';
+import PlacesActions from './PlacesActions';
 
 type Place = {
   id: string;
@@ -17,6 +18,11 @@ type Place = {
 };
 
 export const dynamic = 'force-static';
+
+export const metadata = {
+  title: 'Vibe Places - 适合 Vibe Friends 的创作空间',
+  description: 'Discover creative spaces and places perfect for Vibe Friends to work and create.',
+};
 
 function loadPlaces(): Place[] {
   const root = process.cwd();
@@ -36,10 +42,18 @@ export default function PlacesPage() {
       <BackButton />
       <div className="mx-auto max-w-4xl px-4 py-10">
         <header className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
-            Vibe Places
-          </h1>
-          <p className="text-zinc-300 mt-2">适合 Vibe Friends 的创作空间</p>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
+                Vibe Places
+              </h1>
+              <p className="text-zinc-300 mt-2">适合 Vibe Friends 的创作空间</p>
+            </div>
+            <div className="flex-shrink-0">
+              <PlacesActions />
+            </div>
+          </div>
+          
           <hr className="mt-6 border-zinc-800" />
         </header>
 
