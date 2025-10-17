@@ -158,6 +158,7 @@ export default function MapView({ places, userLocation }: MapViewProps) {
                   zoom={mapZoom}
                   style={{ height: '100%', width: '100%' }}
                   className="map-container"
+                  attributionControl={false}
                 >
                   {/* 高德地图 - 主要图层 */}
                   <TileLayer
